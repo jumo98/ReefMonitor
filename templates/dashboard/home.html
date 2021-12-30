@@ -1,0 +1,93 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %} Home {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+
+{% block content %}
+
+<div class="container-fluid p-4">
+    {% for aquarium in aquariums %}
+    {% if forloop.counter0|divisibleby:2 %}
+    <div class="row">
+        {% endif %}
+        <div class="col">
+            <div class="card shadow p-3 mb-5 bg-white rounded">
+                <div class="card-body">
+                    <h5 class="card-title"> {{ aquarium.name }} </h5>
+                    <p class="card-text"> Last updated: {{ aquarium.update_date }} </p>
+                    <p class="card-text"> Current alarms: 0 </p>
+                    
+                    <div>
+                        <input type="checkbox" class="btn-check" id="measurement-sal" autocomplete="off">
+                        <label class="btn btn-outline-primary" for="measurement-sal">Salinity</label>
+
+                        <input type="checkbox" class="btn-check" id="measurement-temp" autocomplete="off">
+                        <label class="btn btn-outline-secondary" for="measurement-temp">Temperature</label>
+
+                        <input type="checkbox" class="btn-check" id="measurement-carb" autocomplete="off">
+                        <label class="btn btn-outline-success" for="measurement-carb">Carbonate Hardness</label>
+
+                        <input type="checkbox" class="btn-check" id="measurement-calcium" autocomplete="off">
+                        <label class="btn btn-outline-danger" for="measurement-calcium">Calcium</label>
+
+                        <input type="checkbox" class="btn-check" id="measurement-magnesium" autocomplete="off">
+                        <label class="btn btn-outline-warning" for="measurement-magnesium">Magnesium</label>
+
+                    </div>
+
+                    <div id="salinity-input" style="display: none;">
+                        Salinity
+                    </div>
+
+                    <div id="temp-input" style="display: none;">
+                        Temperature
+                    </div>
+
+                    <div id="carb-input" style="display: none;">
+                        Carbonate Hardness
+                    </div>
+
+                    <a href="/{{ aquarium.id }}/overview" class="btn btn-primary">Select</a>
+                </div>
+            </div>
+        </div>
+        {% if forloop.counter0|divisibleby:2 == 0 %}
+    </div>
+    {% endif %}
+
+    {% if forloop.last %}
+    {% if forloop.counter0|divisibleby:2 == 0 %}
+    <div class="row">
+        {% endif %}
+        <div class="col">
+            <div class="card shadow p-3 mb-5 bg-white rounded">
+                <div class="card-body">
+                    <h5 class="card-title"> Create new aquarium </h5>
+                    <p class="card-text"> Last updated: {{ aquarium.update_date }} </p>
+                
+        
+                    <a class="btn btn-primary">Create</a>
+                </div>
+            </div>
+        </div>
+    
+        {% if forloop.counter0|divisibleby:2 == 0 %}
+    </div>
+    {% endif %}
+    {% endif %}
+
+    {% empty %}
+    No aquarium
+    {% endfor %}
+
+    
+</div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

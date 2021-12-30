@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: influxdb
+  namespace: reefmonitor   
+spec:
+  serviceName: influxdb
+  selector:
+    matchLabels:
+      app: influxdb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: influxdb
+    spec:  
+      containers:
+      - name: influxdb
+        image: influxdb:2.1.1
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: 1
+        env:
+        - name: DOCKER_INFLUXDB_INIT_MODE
+          value: setup
+        - name: DOCKER_INFLUXDB_INIT_USERNAME
+          value: admin
+        - name: DOCKER_INFLUXDB_INIT_PASSWORD
+          value: admin123admin
+        - name: DOCKER_INFLUXDB_INIT_ORG
+          value: ReefMonitor
+        - name: DOCKER_INFLUXDB_INIT_BUCKET
+          value: ReefMonitor
+        volumeMounts:
+        - name: data
+          mountPath: /root/.influxdbv2
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+        volumeMode: Filesystem
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: influxdb
+  namespace: reefmonitor  
+spec:
+  selector:
+    app: influxdb
+  type: LoadBalancer
+  ports:
+    - port: 8086
+      targetPort: 8086
