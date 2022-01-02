@@ -1,0 +1,27 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %} Delete {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="container-fluid p-4 overflow-auto">
+    <div>
+
+        Do you really want to delete aquarium {{ aquarium.name }}?
+    </div>
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+    </div>
+
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

@@ -1,14 +1,122 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
 from .models import Aquarium
+from .forms import AquariumForm, MeasurementForm
+from .handler import Handler
 
-# Create your views here.
+from datetime import datetime, timedelta
+import json
+
+name_mapping = {
+    'salinity': 'Salinity',
+    'temperature': 'Temperature',
+    'carbonate': 'Carbon Hardness',
+    'calcium': 'Calcium',
+    'magnesium': 'Magnesium'
+}
+
 @login_required(login_url="/login/")
 def home_view(request):
-    user = request.user
+    form = AquariumForm(request.POST or None)
 
+    latest = {}
+
+    # Retrieve aquariums
+    user = request.user
     aquariums = Aquarium.objects.filter(owner=user)
+    for aq in aquariums:
+        aq.update_date = timezone.localtime(aq.update_date)
+        handler = Handler(aq.id)
+        latest[aq.id] = handler.GetLatestMeasurements()
+
+    msg = None
+
+    if request.method == "POST":
+        if form.is_valid():
+            name = form.cleaned_data.get("name")
+            form.save(name, user)
+        else:
+            msg = 'Error validating the form'
+         
     
-    context = {"aquariums": aquariums}
+    context = {
+        "aquariums": aquariums, 
+        "latest": latest,
+        "form": form, 
+        "query": seven_days_query_param()
+    }
+
     return render(request, "dashboard/home.html", context)
+
+@login_required(login_url="/login/")
+def delete_view(request, aquarium_id):
+    handler = Handler(aquarium_id)
+    msg = None
+
+    if request.method == "POST":
+        handler.Delete()
+        return redirect("/")
+         
+    
+    context = {"aquarium": handler.aquarium}
+    return render(request, "dashboard/delete.html", context)
+
+
+@login_required(login_url="/login/")
+def overview_view(request, aquarium_id):
+    # Create context and attach mapping for parameters
+    context = {}
+    context['name_map'] = name_mapping
+
+    # Retrieve time range from query params
+    time_end = datetime.fromisoformat(request.GET.get('end', datetime.now().isoformat()))
+    time_start = datetime.fromisoformat(request.GET.get('start', str(time_end - timedelta(days=7))))
+    context['time_end'] = time_end
+    context['time_start'] = time_start
+
+    # Get current user and corresponding aquariums for nav bar
+    user = request.user
+    aquariums = Aquarium.objects.filter(owner=user)
+    context['aquariums'] = aquariums
+
+    # Attach measurement form
+    form = MeasurementForm(request.POST or None)
+    context['form'] = form
+
+    # Get currently selected aquarium and open db connection to retrieve measurements from selected time range
+    handler = Handler(aquarium_id)
+    parameters = handler.GetMeasurements(time_start, time_end)
+    context['parameters_dict'] = parameters
+    context['parameters'] = json.dumps(parameters)
+
+    # Handle measurement form
+    if request.method == "POST":
+        if form.is_valid():
+            # Retrieve datetime for measurement
+            date = request.POST.get('date')
+            time = request.POST.get('time')
+            datetime_str = date + "T" + time + "Z"
+            timestamp = datetime.strptime(datetime_str, '%Y-%m-%dT%H:%M:%SZ')
+
+            measurement = form.ToMeasurement(time_to_local(timestamp))
+            handler.AddMeasurement(measurement)
+            measurement.delete()
+        else:
+            print("Form not valid")
+        #return redirect("/" + aquarium_id + "/overview")
+        return render(request, "dashboard/overview.html", context)
+
+    return render(request, "dashboard/overview.html", context)
+
+def seven_days_query_param():
+    end = datetime.now()
+    days = timedelta(7)
+    start = end - days
+
+    return "?start=" + start.isoformat() + "&end=" + end.isoformat()
+
+def time_to_local(timestamp):
+    tz = timezone.get_current_timezone()
+    return tz.localize(timestamp)

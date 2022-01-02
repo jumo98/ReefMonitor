@@ -1,5 +1,8 @@
 {% extends "dashboard/base.html" %}
 
+{% load filters %}
+{% load humanize %}
+
 {% block title %} Home {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
@@ -8,49 +11,70 @@
 
 {% block content %}
 
-<div class="container-fluid p-4">
+<div class="container-fluid p-4 overflow-auto">
     {% for aquarium in aquariums %}
     {% if forloop.counter0|divisibleby:2 %}
     <div class="row">
         {% endif %}
         <div class="col">
-            <div class="card shadow p-3 mb-5 bg-white rounded">
+            <div class="card shadow p-3 mb-3 bg-white rounded">
                 <div class="card-body">
                     <h5 class="card-title"> {{ aquarium.name }} </h5>
-                    <p class="card-text"> Last updated: {{ aquarium.update_date }} </p>
-                    <p class="card-text"> Current alarms: 0 </p>
-                    
-                    <div>
-                        <input type="checkbox" class="btn-check" id="measurement-sal" autocomplete="off">
-                        <label class="btn btn-outline-primary" for="measurement-sal">Salinity</label>
 
-                        <input type="checkbox" class="btn-check" id="measurement-temp" autocomplete="off">
-                        <label class="btn btn-outline-secondary" for="measurement-temp">Temperature</label>
+                    <p class="card-text"> Last updated: {{ aquarium.update_date|naturaltime}} </p>
 
-                        <input type="checkbox" class="btn-check" id="measurement-carb" autocomplete="off">
-                        <label class="btn btn-outline-success" for="measurement-carb">Carbonate Hardness</label>
+                    {% define aquarium.id as id %}
 
-                        <input type="checkbox" class="btn-check" id="measurement-calcium" autocomplete="off">
-                        <label class="btn btn-outline-danger" for="measurement-calcium">Calcium</label>
+                    <hr>
 
-                        <input type="checkbox" class="btn-check" id="measurement-magnesium" autocomplete="off">
-                        <label class="btn btn-outline-warning" for="measurement-magnesium">Magnesium</label>
+                    <div class="mb-3">
+                        <p class="card-text"> Current Values</p>
+                        {% for measurement in latest|hash:id %}
+
+                        {% if measurement == "salinity" %}
+                        <span class="d-inline-block mb-2" data-toggle="tooltip"
+                            title="{{ latest|hash:id|timestamp:measurement }}">
+                            <button type="button" class="btn btn-primary">Salinity: {{ latest|hash:id|value:measurement }} </button>
+                        </span>
+                        {% endif %}
+
+                        {% if measurement == "temperature" %}
+                        <span class="d-inline-block mb-2" data-toggle="tooltip"
+                            title="{{ latest|hash:id|timestamp:measurement }}">
+                            <button type="button" class="btn btn-secondary">Temperature: {{ latest|hash:id|value:measurement }} </button>
+                        </span>
+                        {% endif %}
+
+                        {% if measurement == "carbonate" %}
+                        <span class="d-inline-block mb-2" data-toggle="tooltip"
+                            title="{{ latest|hash:id|timestamp:measurement }}">
+                            <button type="button" class="btn btn-success">Carbonate Hardness: {{ latest|hash:id|value:measurement }} </button>
+                        </span>
+                        {% endif %}
+
+                        {% if measurement == "calcium" %}
+                        <span class="d-inline-block mb-2" data-toggle="tooltip"
+                            title="{{ latest|hash:id|timestamp:measurement }}">
+                            <button type="button" class="btn btn-danger">Calcium: {{ latest|hash:id|value:measurement }} </button>
+                        </span>
+                        {% endif %}
+
+                        {% if measurement == "magnesium" %}
+                        <span class="d-inline-block mb-2" data-toggle="tooltip"
+                            title="{{ latest|hash:id|timestamp:measurement }}">
+                            <button type="button" class="btn btn-warning">Magnesium: {{ latest|hash:id|value:measurement }} </button>
+                        </span>
+                        {% endif %}
+
+                        {% endfor %}
+
 
                     </div>
 
-                    <div id="salinity-input" style="display: none;">
-                        Salinity
-                    </div>
+                    <hr>
 
-                    <div id="temp-input" style="display: none;">
-                        Temperature
-                    </div>
-
-                    <div id="carb-input" style="display: none;">
-                        Carbonate Hardness
-                    </div>
-
-                    <a href="/{{ aquarium.id }}/overview" class="btn btn-primary">Select</a>
+                    <a href="/{{ aquarium.id }}/overview{{ query }}" class="btn btn-primary">Select</a>
+                    <a href="/{{ aquarium.id }}/delete" class="btn btn-danger">Delete</a>
                 </div>
             </div>
         </div>
@@ -63,17 +87,23 @@
     <div class="row">
         {% endif %}
         <div class="col">
-            <div class="card shadow p-3 mb-5 bg-white rounded">
+            <div class="card shadow p-3 mb-3 bg-white rounded">
+
+
                 <div class="card-body">
-                    <h5 class="card-title"> Create new aquarium </h5>
-                    <p class="card-text"> Last updated: {{ aquarium.update_date }} </p>
-                
-        
-                    <a class="btn btn-primary">Create</a>
+                    <h5 class="card-title"> Add new aquarium </h5>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form }}
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </form>
+
+
                 </div>
             </div>
         </div>
-    
+
         {% if forloop.counter0|divisibleby:2 == 0 %}
     </div>
     {% endif %}
@@ -83,7 +113,7 @@
     No aquarium
     {% endfor %}
 
-    
+
 </div>
 </div>
 

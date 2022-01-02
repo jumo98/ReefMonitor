@@ -1,0 +1,220 @@
+{% extends "dashboard/base.html" %}
+
+{% load filters %}
+
+{% block title %} Overview {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+
+{% block content %}
+<div class="container-fluid p-4 overflow-auto">
+    <div class="row">
+        <div class="col">
+            <div class="card shadow p-3 mb-3 bg-white rounded">
+                <div class="card-body">
+                    <h5 class="card-title"> Add Measurement </h5>
+                    <p class="card-text"> Select the parameters you want to add data for
+
+                        {% if msg %}
+                        {{ msg | safe }}
+                        {% else %}
+                        {% endif %}
+                    </p>
+
+                    <div>
+                        <input type="checkbox" class="btn-check" id="measurement-sal" autocomplete="off">
+                        <label class="btn btn-outline-primary" for="measurement-sal">Salinity</label>
+
+                        <input type="checkbox" class="btn-check" id="measurement-temp" autocomplete="off">
+                        <label class="btn btn-outline-secondary" for="measurement-temp">Temperature</label>
+
+                        <input type="checkbox" class="btn-check" id="measurement-carb" autocomplete="off">
+                        <label class="btn btn-outline-success" for="measurement-carb">Carbonate Hardness</label>
+
+                        <input type="checkbox" class="btn-check" id="measurement-calcium" autocomplete="off">
+                        <label class="btn btn-outline-danger" for="measurement-calcium">Calcium</label>
+
+                        <input type="checkbox" class="btn-check" id="measurement-magnesium" autocomplete="off">
+                        <label class="btn btn-outline-warning" for="measurement-magnesium">Magnesium</label>
+
+                    </div>
+
+                    <form method="post" action="">
+                        {% csrf_token %}
+
+                        <hr>
+
+                        <div class="form-group mb-4" style="display: none;" id="salinity-input">
+                            <div class="input-group">
+                                <span class="input-group-text" id="salinity">
+                                    Salinity
+                                </span>
+                                {{ form.salinity }}
+                                <span class="input-group-text">
+                                    g/l
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4" style="display: none;" id="temp-input">
+                            <div class="input-group">
+                                <span class="input-group-text" id="temperature">
+                                    Temperature
+                                </span>
+                                {{ form.temperature }}
+                                <span class="input-group-text">
+                                    °C
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4" style="display: none;" id="carb-input">
+                            <div class="input-group">
+                                <span class="input-group-text" id="carbonate">
+                                    Carbonate Hardness
+                                </span>
+                                {{ form.carbonate }}
+                                <span class="input-group-text">
+                                    kH
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4" style="display: none;" id="calcium-input">
+                            <div class="input-group">
+                                <span class="input-group-text" id="calcium">
+                                    Calcium
+                                </span>
+                                {{ form.calcium }}
+                                <span class="input-group-text">
+                                    ppm
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4" style="display: none;" id="magnesium-input">
+                            <div class="input-group">
+                                <span class="input-group-text" id="magnesium">
+                                    Magnesium
+                                </span>
+                                {{ form.magnesium }}
+                                <span class="input-group-text">
+                                    ppm
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4" id="timestamp-input" style="display: none;">
+                            <div class="input-group date">
+                                <span class="input-group-text">Date and time</span>
+                                <input type="date" name="date" class="form-control" id="input-date" required>
+                                <button class="btn btn-outline-secondary" id="button-date-now"
+                                    type="button">Today</button>
+                                <input type="time" name="time" class="form-control" id="input-time" step="1" required>
+                                <button class="btn btn-outline-secondary" id="button-time-now"
+                                    type="button">Now</button>
+                            </div>
+                        </div>
+
+                        <div class="pt-3">
+                            <button type="submit" disabled="true" id="button-submit" name="submit"
+                                class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="card shadow p-3 mb-3 bg-white rounded">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group mb-4" id="timestamp-input">
+                                <div class="input-group date">
+                                    <span class="input-group-text">From</span>
+                                    <input type="date" name="date" class="form-control" id="input-start-date" required>
+                                    <!-- <button class="btn btn-outline-secondary" id="button-start-date" type="button">Yesterday</button> -->
+                                    <input type="time" name="time" class="form-control" id="input-start-time" step="1"
+                                        required>
+                                    <!-- <button class="btn btn-outline-secondary" id="button-start-time" type="button">Last </button> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group mb-4" id="timestamp-input">
+                                <div class="input-group date">
+                                    <span class="input-group-text">To</span>
+                                    <input type="date" name="date" class="form-control" id="input-end-date" required>
+                                    <button class="btn btn-outline-secondary" id="button-end-date"
+                                        type="button">Today</button>
+                                    <input type="time" name="time" class="form-control" id="input-end-time" step="1"
+                                        required>
+                                    <button class="btn btn-outline-secondary" id="button-end-time"
+                                        type="button">Now</button>
+                                        <button type="submit" disabled="true" id="button-submit" name="submit"
+                                        class="btn btn-primary">Apply</button>
+                                        
+                                </div>
+                                <div>
+                                    
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    
+
+    {% for parameter, values in parameters_dict.items %}
+    {% if forloop.counter0|divisibleby:2 %}
+    <div class="row">
+        {% endif %}
+        <div class="col">
+
+            <div class="card shadow p-3 mb-3 bg-white rounded">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {{ name_map|hash:parameter }}
+                    </h5>
+                    <!-- <p class="card-text"> Blah </p> -->
+
+                    <div style="padding-left: 5%; padding-right: 5%; padding-bottom: 5%;">
+                        <canvas id="chart-{{parameter}}"></canvas>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        {% if forloop.counter0|divisibleby:2 == 0 %}
+    </div>
+    {% endif %}
+    {% empty %}
+    {% endfor %}
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+{% load static %}
+
+<script src="{% static 'js/checkbox.js' %}"></script>
+<script src="{% static 'js/graph.js' %}"></script>
+<script>
+    var parameters = "{{ parameters | escapejs }}";
+    var time_start = "{{ time_start | escapejs }}";
+    var time_end = "{{ time_end | escapejs }}";
+</script>
+{% endblock javascripts %}

@@ -13,6 +13,20 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 
+# Application Config
+INFLUX_URL = "http://localhost:8086"
+INFLUX_TOKEN = "C3Sa8vVchgXXDnAYK_dIt46WKsOmsgjNZiDM-DNAhK3bUtv_u4lYTTt8ZVdu4Z3qk9YaxTXwmgiOQcIAetqM7w=="
+INFLUX_ORG = "ReefMonitor"
+
+# REST API 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -32,8 +46,11 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'reefmonitor.apps.api',
     'reefmonitor.apps.aquariums',
     'reefmonitor.apps.users',
+
+    'rest_framework',
     
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,6 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
@@ -111,7 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Berlin'
 
 USE_I18N = True
 
