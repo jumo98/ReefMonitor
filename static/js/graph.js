@@ -1,9 +1,9 @@
 var chartColors = {
-    salinity: '#0D6EFD',
-    temperature: '#6C757D',
-    carbonate: '#198754',
-    calcium: '#DC3545',
-    magnesium: '#FFC107',
+    "Salinity": '#0D6EFD',
+    "Temperature": '#6C757D',
+    "Carbonate Hardness": '#198754',
+    "Calcium": '#DC3545',
+    "Magnesium": '#FFC107',
 };
 
 var init = false;
@@ -103,7 +103,7 @@ function loadCharts() {
                 colors: [],
                 cubicInterpolationMode: 'monotone',
                 borderColor: chartColors[name],
-                // backgroundColor: 'rgb(102, 252, 241)',
+                backgroundColor: chartColors[name],
                 tension: 0.1
             }]
         };

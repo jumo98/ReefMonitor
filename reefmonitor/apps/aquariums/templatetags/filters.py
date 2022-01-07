@@ -6,6 +6,7 @@ register = template.Library()
 
 @register.filter(name='hash')
 def hash(map, key):
+    print(map)
     return map[key]
 
 @register.filter(name='value')

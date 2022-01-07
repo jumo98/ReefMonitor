@@ -28,6 +28,8 @@ spec:
           value: admin
         - name: DOCKER_INFLUXDB_INIT_PASSWORD
           value: admin123admin
+        - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+          value: adminadminadmin
         - name: DOCKER_INFLUXDB_INIT_ORG
           value: ReefMonitor
         - name: DOCKER_INFLUXDB_INIT_BUCKET

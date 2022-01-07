@@ -7,7 +7,7 @@ from rest_framework import status
 from django.http import JsonResponse
 
 from ..aquariums.serializers import AquariumSerializer, MeasurementSerializer
-from ..aquariums.models import Aquarium, Measurement
+from ..aquariums.models import Aquarium
 from ..aquariums.handler import Handler
 
 class AquariumView(APIView):

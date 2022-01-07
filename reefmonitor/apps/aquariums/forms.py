@@ -4,7 +4,14 @@ from django.utils import timezone
 from .models import Aquarium, Measurement, Parameter
 
 class AquariumForm(forms.Form):
-    name = forms.CharField(max_length=24)
+    name = forms.CharField(max_length=24,
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Aquarium",
+                "class": "form-control"
+            }
+        ),
+        required=True)
 
     def save(self, name, user):
         aquarium = Aquarium(name=name, owner=user, create_date=timezone.now(), update_date=timezone.now())

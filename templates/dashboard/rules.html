@@ -1,0 +1,152 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %} Rules {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+
+{% block content %}
+
+<div class="p-4">
+    <div class="row row-cols-1 row-cols-md-2">
+        <div class="col">
+            <div class="card shadow p-3 mb-3 bg-white rounded">
+                <form method="post">
+                <div class="card-body pb-0">
+                    <h5 class="card-title"> Create a new rule </h5>
+                    <hr>
+                    
+                        {% csrf_token %}
+                        <div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">Parameter</span>                               
+                                <select name="parameter" id="id_parameter" class="form-select">
+                                    {% for parameter in parameters %}
+                                    <option value="{{ parameter.0 }}">{{ parameter.0 }}</option>
+                                    {% endfor %}
+                                </select>
+                              </div>
+                              <div class="input-group mb-3">
+                                <span class="input-group-text">Type</span>
+                                <select name="type" id="id_type" class="form-select">
+                                    {% for type in types %}
+                                    <option value="{{ type.0 }}">{{ type.0 }}</option>
+                                    {% endfor %}
+                                </select>
+                              </div>
+
+                              <div class="input-group mb-3">
+                                <span class="input-group-text">Value</span>
+                                {{ form_create.value }}
+                                <span class="input-group-text" id="create-value">°C</span>
+                              </div>
+                        </div>
+                        
+                        
+                    
+                </div>
+                <div class="ps-3 mb-1">
+                    <hr>
+                    <button name="create" type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+            </div>
+        </div>
+        {% if selected_rule %}
+        <div class="col">
+            <div class="card shadow p-3 mb-3 bg-white rounded">
+                <form method="post">
+                <div class="card-body pb-0">
+                    <h5 class="card-title"> Edit rule </h5>
+                    <hr>
+                    
+                        {% csrf_token %}
+                        <div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">Parameter</span>                               
+                                <select name="parameter" id="id_parameter_create" class="form-select">
+                                    <option selected>{{form_edit.initial.parameter}}</option>
+                                    {% for parameter in parameters %}
+                                    {% if form_edit.initial.parameter != parameter.0 %}
+                                    <option value="{{ parameter.0 }}">{{ parameter.0 }}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                              </div>
+                              <div class="input-group mb-3">
+                                <span class="input-group-text" >Type</span>
+                                <select name="type" id="id_type" class="form-select">
+                                    <option selected>{{form_edit.initial.type}}</option>
+                                    {% for type in types %}
+                                    <option value="{{ type.0 }}">{{ type.0 }}</option>
+                                    {% endfor %}
+                                </select>
+                              </div>
+
+                              <div class="input-group mb-3">
+                                <span class="input-group-text">Value</span>
+                                {{form_edit.value}}
+                                <span class="input-group-text" id="edit-value">°C</span>
+                              </div>
+                        </div>
+                        
+                    
+
+                </div>
+                <div class="ps-3 mb-1">
+                    <hr>
+                    <button name="edit" type="submit" class="btn btn-warning">Save</button>
+                </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="row row-cols-1 row-cols-md-1">
+        <div class="col">
+            <div class="card shadow p-3 mb-3 bg-white rounded h-auto overflow-auto">
+                    <div class="card-body">
+                        <h5 class="card-title"> Active rules for {{ aquarium.name }} </h5>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Parameter</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Value</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for rule in rules %}
+                                <tr {% if rule.id == selected_rule.id %} class="table-active" {% endif %}>
+                                    <th scope="row">{{ rule.parameter }}</th>
+                                    <td>{{ rule.type }}</td>
+                                    <td>{{ rule.value }}</td>
+                                    <td >
+                                        <div class="ml-auto p-2">
+                                            
+                                            <form method="post">
+                                                <a href="/{{ aquarium.id }}/rules?id={{ rule.id }}" class="btn btn-warning">Edit</a>
+                                                {% csrf_token %}
+                                                <button name="delete" type="submit" value="{{ rule.id }}" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+{% load static %}
+<script src="{% static 'js/rules.js' %}"></script>
+{% endblock javascripts %}

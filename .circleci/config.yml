@@ -1,0 +1,32 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@1.2
+
+jobs:
+  build-and-test:
+    docker:
+      - image: cimg/python:3.8
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+          # app-dir: ~/project/package-directory/  # If you're requirements.txt isn't in the root directory.
+          # pip-dependency-file: test-requirements.txt  # if you have a different name for your requirements file, maybe one that combines your runtime and test requirements.
+      - run:
+          name: Run tests
+          # This assumes pytest is installed via the install-package step above
+          command: pytest
+  build:
+   machine: true
+   steps:
+     - checkout
+     - run: |
+         echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+     - run: docker build -t motzi/reefmonitor:$CIRCLE_BRANCH .
+     - run: docker push motzi/reefmonitor:$CIRCLE_BRANCH
+  
+workflows:
+  release: 
+    jobs:
+      - build

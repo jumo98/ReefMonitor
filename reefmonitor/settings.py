@@ -14,18 +14,27 @@ import os
 from pathlib import Path
 
 # Application Config
-INFLUX_URL = "http://localhost:8086"
-INFLUX_TOKEN = "C3Sa8vVchgXXDnAYK_dIt46WKsOmsgjNZiDM-DNAhK3bUtv_u4lYTTt8ZVdu4Z3qk9YaxTXwmgiOQcIAetqM7w=="
+# InfluxDB
 INFLUX_ORG = "ReefMonitor"
+INFLUX_URL = os.environ.get("INFLUX_URL")
+if INFLUX_URL == None or INFLUX_URL == "":
+    INFLUX_URL = "http://localhost:8086"
+INFLUX_TOKEN = os.environ.get("INFLUX_TOKEN")
+if INFLUX_TOKEN == None or INFLUX_TOKEN == "":
+    INFLUX_TOKEN = "adminadminadmin"
+
+# Mailjet
+MAILJET_KEY = os.environ.get("MAILJET_KEY")
+MAILJET_SECRET = os.environ.get("MAILJET_SECRET")
 
 # REST API 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-    ]
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
 }
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -36,11 +45,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-+@9#3ttsh$v9pov50v&r=+_#o7(-%w_1#3h)bw*g&-%+k=ff@q'
+#SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ADDITIONAL_HOST = os.environ.get("HOST")
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "192.168.0.155", ADDITIONAL_HOST]
 
 
 # Application definition
@@ -48,9 +59,13 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'reefmonitor.apps.api',
     'reefmonitor.apps.aquariums',
+    'reefmonitor.apps.rules',
     'reefmonitor.apps.users',
+    'reefmonitor.apps.notifications',
 
     'rest_framework',
+    'rest_framework_swagger',
+    # 'django_extensions',
     
     'django.contrib.admin',
     'django.contrib.auth',
@@ -87,7 +102,11 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries' : {
+                'staticfiles': 'django.templatetags.static', 
+        }
         },
+        
     },
 ]
 
@@ -151,3 +170,9 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Graph Model
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}

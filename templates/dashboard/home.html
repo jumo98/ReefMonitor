@@ -7,62 +7,57 @@
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
-
-
 {% block content %}
 
-<div class="container-fluid p-4 overflow-auto">
-    {% for aquarium in aquariums %}
-    {% if forloop.counter0|divisibleby:2 %}
-    <div class="row">
-        {% endif %}
+<div class="p-4">
+    <div class="row row-cols-1 row-cols-md-2 g-4 card-group">
+        {% for aquarium in aquariums %}
         <div class="col">
-            <div class="card shadow p-3 mb-3 bg-white rounded">
-                <div class="card-body">
+            <div class="card shadow p-3 mb-3 bg-white rounded h-100">
+                <div class="card-body pb-0">
                     <h5 class="card-title"> {{ aquarium.name }} </h5>
-
                     <p class="card-text"> Last updated: {{ aquarium.update_date|naturaltime}} </p>
-
+                    
+                    
                     {% define aquarium.id as id %}
-
                     <hr>
-
-                    <div class="mb-3">
+                    <div>
                         <p class="card-text"> Current Values</p>
                         {% for measurement in latest|hash:id %}
 
-                        {% if measurement == "salinity" %}
+                        {% if measurement == "Salinity" %}
                         <span class="d-inline-block mb-2" data-toggle="tooltip"
                             title="{{ latest|hash:id|timestamp:measurement }}">
-                            <button type="button" class="btn btn-primary">Salinity: {{ latest|hash:id|value:measurement }} </button>
+                            <button type="button" class="btn btn-primary">Salinity: {{ latest|hash:id|value:measurement}} </button>
                         </span>
                         {% endif %}
 
-                        {% if measurement == "temperature" %}
+                        {% if measurement == "Temperature" %}
                         <span class="d-inline-block mb-2" data-toggle="tooltip"
                             title="{{ latest|hash:id|timestamp:measurement }}">
-                            <button type="button" class="btn btn-secondary">Temperature: {{ latest|hash:id|value:measurement }} </button>
+                            <button type="button" class="btn btn-secondary">Temperature: {{latest|hash:id|value:measurement }} </button>
                         </span>
                         {% endif %}
 
-                        {% if measurement == "carbonate" %}
+                        {% if measurement == "Carbonate Hardness" %}
                         <span class="d-inline-block mb-2" data-toggle="tooltip"
                             title="{{ latest|hash:id|timestamp:measurement }}">
-                            <button type="button" class="btn btn-success">Carbonate Hardness: {{ latest|hash:id|value:measurement }} </button>
+                            <button type="button" class="btn btn-success">Carbonate Hardness: {{latest|hash:id|value:measurement }} </button>
                         </span>
                         {% endif %}
 
-                        {% if measurement == "calcium" %}
+                        {% if measurement == "Calcium" %}
                         <span class="d-inline-block mb-2" data-toggle="tooltip"
                             title="{{ latest|hash:id|timestamp:measurement }}">
-                            <button type="button" class="btn btn-danger">Calcium: {{ latest|hash:id|value:measurement }} </button>
+                            <button type="button" class="btn btn-danger">Calcium: {{ latest|hash:id|value:measurement }}
+                            </button>
                         </span>
                         {% endif %}
 
-                        {% if measurement == "magnesium" %}
+                        {% if measurement == "Magnesium" %}
                         <span class="d-inline-block mb-2" data-toggle="tooltip"
                             title="{{ latest|hash:id|timestamp:measurement }}">
-                            <button type="button" class="btn btn-warning">Magnesium: {{ latest|hash:id|value:measurement }} </button>
+                            <button type="button" class="btn btn-warning">Magnesium: {{ latest|hash:id|value:measurement}} </button>
                         </span>
                         {% endif %}
 
@@ -70,51 +65,42 @@
 
 
                     </div>
-
+                    
+                    
+                    
+                </div>
+                <div class="ps-3 mb-1">
                     <hr>
-
                     <a href="/{{ aquarium.id }}/overview{{ query }}" class="btn btn-primary">Select</a>
-                    <a href="/{{ aquarium.id }}/delete" class="btn btn-danger">Delete</a>
+                    <a href="/{{ aquarium.id }}/delete" class="btn btn-danger" style="position: relative;">Delete</a>
                 </div>
             </div>
         </div>
-        {% if forloop.counter0|divisibleby:2 == 0 %}
-    </div>
-    {% endif %}
-
-    {% if forloop.last %}
-    {% if forloop.counter0|divisibleby:2 == 0 %}
-    <div class="row">
-        {% endif %}
+        {% endfor %}
         <div class="col">
-            <div class="card shadow p-3 mb-3 bg-white rounded">
-
-
+            <div class="card shadow p-3 mb-3 bg-white rounded h-100">
+                <form method="post">
                 <div class="card-body">
                     <h5 class="card-title"> Add new aquarium </h5>
-
-                    <form method="post">
+                    <hr>
                         {% csrf_token %}
-                        {{ form }}
-                        <button type="submit" class="btn btn-primary">Create</button>
-                    </form>
-
-
+                        {% if msg %}
+                        {{ msg }}
+                        {% endif %}
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Name</span>
+                            {{form.name}}
+                        </div>
                 </div>
+                <div class="ps-3 mb-1">
+                    <hr>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
             </div>
         </div>
-
-        {% if forloop.counter0|divisibleby:2 == 0 %}
+        
     </div>
-    {% endif %}
-    {% endif %}
-
-    {% empty %}
-    No aquarium
-    {% endfor %}
-
-
-</div>
 </div>
 
 {% endblock content %}

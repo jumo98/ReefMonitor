@@ -21,17 +21,45 @@ class Aquarium(models.Model):
         return self.id
 
 class Parameter(models.Model):
+    class Meta: 
+        verbose_name = "Parameter"
+        verbose_name_plural = "Parameters"
+
     class Name(models.TextChoices):
-        SALI = 'salinity'
-        TEMP = 'temperature'
-        CARB = 'carbonate'
-        CALC = 'calcium'
-        MAGN = 'magnesium'
+        SALI = 'salinity', 'Salinity'
+        TEMP = 'temperature', 'Temperature'
+        CARB = 'carbonate', 'Carbonate Hardness'
+        CALC = 'calcium', 'Calcium'
+        MAGN = 'magnesium', 'Magnesium'
+
+    
+    class Units(models.TextChoices):
+        SALI = 'salinity', 'g/l'
+        TEMP = 'temperature', '°C'
+        CARB = 'carbonate', 'KH'
+        CALC = 'calcium', 'ppm'
+        MAGN = 'magnesium', 'ppm'
 
     name = models.CharField(max_length=48, choices=Name.choices, default=Name.TEMP)
     value = models.FloatField()
 
+    def DisplayName(self, name):
+        d = dict(self.Name.choices)
+        if name in d:
+            return d[name]
+        return None
+
+    def DisplayUnit(self, name):
+        d = dict(self.Units.choices)
+        if name in d:
+            return d[name]
+        return None
+
 class Measurement(models.Model):
+    class Meta: 
+        verbose_name = "Measurement"
+        verbose_name_plural = "Measurements"
+
     timestamp = models.DateTimeField('timestamp')
     parameters = models.ManyToManyField(Parameter)
 

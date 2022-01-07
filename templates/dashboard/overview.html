@@ -10,7 +10,7 @@
 
 {% block content %}
 <div class="container-fluid p-4 overflow-auto">
-    <div class="row">
+    <div class="row row-cols-1 row-cols-md-1">
         <div class="col">
             <div class="card shadow p-3 mb-3 bg-white rounded">
                 <div class="card-body">
@@ -49,11 +49,11 @@
                         <div class="form-group mb-4" style="display: none;" id="salinity-input">
                             <div class="input-group">
                                 <span class="input-group-text" id="salinity">
-                                    Salinity
+                                {{ parameter_names.0 }}
                                 </span>
                                 {{ form.salinity }}
                                 <span class="input-group-text">
-                                    g/l
+                                {{ parameter_units }}
                                 </span>
                             </div>
                         </div>
@@ -61,11 +61,11 @@
                         <div class="form-group mb-4" style="display: none;" id="temp-input">
                             <div class="input-group">
                                 <span class="input-group-text" id="temperature">
-                                    Temperature
+                                {{ parameter_names.temperature}}
                                 </span>
                                 {{ form.temperature }}
                                 <span class="input-group-text">
-                                    °C
+                                {{ parameter_units.temperature}}
                                 </span>
                             </div>
                         </div>
@@ -73,11 +73,11 @@
                         <div class="form-group mb-4" style="display: none;" id="carb-input">
                             <div class="input-group">
                                 <span class="input-group-text" id="carbonate">
-                                    Carbonate Hardness
+                                {{ parameter_names.carbonate}}
                                 </span>
                                 {{ form.carbonate }}
                                 <span class="input-group-text">
-                                    kH
+                                {{ parameter_units.carbonate}}
                                 </span>
                             </div>
                         </div>
@@ -85,11 +85,11 @@
                         <div class="form-group mb-4" style="display: none;" id="calcium-input">
                             <div class="input-group">
                                 <span class="input-group-text" id="calcium">
-                                    Calcium
+                                {{ parameter_names.calcium}}
                                 </span>
                                 {{ form.calcium }}
                                 <span class="input-group-text">
-                                    ppm
+                                {{ parameter_units.calcium}}
                                 </span>
                             </div>
                         </div>
@@ -97,11 +97,11 @@
                         <div class="form-group mb-4" style="display: none;" id="magnesium-input">
                             <div class="input-group">
                                 <span class="input-group-text" id="magnesium">
-                                    Magnesium
+                                {{ parameter_names.magnesium}}
                                 </span>
                                 {{ form.magnesium }}
                                 <span class="input-group-text">
-                                    ppm
+                                {{ parameter_units.magnesium}}
                                 </span>
                             </div>
                         </div>
@@ -127,20 +127,18 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row row-cols-1 row-cols-md-1">
         <div class="col">
             <div class="card shadow p-3 mb-3 bg-white rounded">
                 <div class="card-body">
-                    <div class="row">
+                    <div class="row row-cols-1 row-cols-md-2">
                         <div class="col">
                             <div class="form-group mb-4" id="timestamp-input">
                                 <div class="input-group date">
                                     <span class="input-group-text">From</span>
                                     <input type="date" name="date" class="form-control" id="input-start-date" required>
-                                    <!-- <button class="btn btn-outline-secondary" id="button-start-date" type="button">Yesterday</button> -->
                                     <input type="time" name="time" class="form-control" id="input-start-time" step="1"
                                         required>
-                                    <!-- <button class="btn btn-outline-secondary" id="button-start-time" type="button">Last </button> -->
                                 </div>
                             </div>
                         </div>
@@ -154,39 +152,25 @@
                                     <input type="time" name="time" class="form-control" id="input-end-time" step="1"
                                         required>
                                     <button class="btn btn-outline-secondary" id="button-end-time"
-                                        type="button">Now</button>
-                                        <button type="submit" disabled="true" id="button-submit" name="submit"
-                                        class="btn btn-primary">Apply</button>
-                                        
+                                        type="button">Now</button>                                       
                                 </div>
-                                <div>
-                                    
-                                </div>
-                                
                             </div>
-                            
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
-
     </div>
 
     
-
+    <div class="row row-cols-1 row-cols-md-2">
     {% for parameter, values in parameters_dict.items %}
-    {% if forloop.counter0|divisibleby:2 %}
-    <div class="row">
-        {% endif %}
+    
         <div class="col">
-
             <div class="card shadow p-3 mb-3 bg-white rounded">
                 <div class="card-body">
                     <h5 class="card-title">
-                        {{ name_map|hash:parameter }}
+                        {{ parameter }}
                     </h5>
                     <!-- <p class="card-text"> Blah </p> -->
 
@@ -197,11 +181,8 @@
                 </div>
             </div>
         </div>
-        {% if forloop.counter0|divisibleby:2 == 0 %}
-    </div>
-    {% endif %}
-    {% empty %}
     {% endfor %}
+    </div>
 </div>
 
 {% endblock content %}

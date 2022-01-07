@@ -2,41 +2,46 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
-from .models import Aquarium
+from .models import Aquarium, Parameter
 from .forms import AquariumForm, MeasurementForm
 from .handler import Handler
 
 from datetime import datetime, timedelta
 import json
 
-name_mapping = {
-    'salinity': 'Salinity',
-    'temperature': 'Temperature',
-    'carbonate': 'Carbon Hardness',
-    'calcium': 'Calcium',
-    'magnesium': 'Magnesium'
-}
-
 @login_required(login_url="/login/")
 def home_view(request):
+    # Initialize form for creating a new aquarium
     form = AquariumForm(request.POST or None)
 
-    latest = {}
-
-    # Retrieve aquariums
+    # Retrieve user and its aquariums
     user = request.user
     aquariums = Aquarium.objects.filter(owner=user)
+
+    # Try to get the latest values and localize the time for each aquarium
+    latest = {}
     for aq in aquariums:
         aq.update_date = timezone.localtime(aq.update_date)
-        handler = Handler(aq.id)
-        latest[aq.id] = handler.GetLatestMeasurements()
+
+        # Try comm with database, if not available --> no value to display
+        try:
+            handler = Handler(aq.id)
+            latest[aq.id] = handler.GetLatestMeasurements()
+        except:
+            latest[aq.id] = {}
 
     msg = None
 
+    # Validate form
     if request.method == "POST":
         if form.is_valid():
             name = form.cleaned_data.get("name")
-            form.save(name, user)
+
+            if Aquarium.objects.filter(owner=user, name=name).count() > 0:
+                msg = f'There already exists an aquarium with the name: {name}'
+            else:    
+                form.save(name, user)
+                return redirect("/")
         else:
             msg = 'Error validating the form'
          
@@ -45,16 +50,23 @@ def home_view(request):
         "aquariums": aquariums, 
         "latest": latest,
         "form": form, 
+        "msg": msg,
         "query": seven_days_query_param()
     }
 
     return render(request, "dashboard/home.html", context)
 
+
 @login_required(login_url="/login/")
 def delete_view(request, aquarium_id):
-    handler = Handler(aquarium_id)
-    msg = None
+    user = request.user 
 
+    # Check if user has access to this aquarium
+    if Aquarium.objects.filter(owner=user, id=aquarium_id).count() == 0:
+        return redirect("/")
+
+
+    handler = Handler(aquarium_id)
     if request.method == "POST":
         handler.Delete()
         return redirect("/")
@@ -68,7 +80,8 @@ def delete_view(request, aquarium_id):
 def overview_view(request, aquarium_id):
     # Create context and attach mapping for parameters
     context = {}
-    context['name_map'] = name_mapping
+    context['parameter_names'] = Parameter.Name.choices
+    context['parameter_units'] = Parameter.Units.choices
 
     # Retrieve time range from query params
     time_end = datetime.fromisoformat(request.GET.get('end', datetime.now().isoformat()))
