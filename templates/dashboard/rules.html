@@ -23,7 +23,7 @@
                                 <span class="input-group-text">Parameter</span>                               
                                 <select name="parameter" id="id_parameter" class="form-select">
                                     {% for parameter in parameters %}
-                                    <option value="{{ parameter.0 }}">{{ parameter.0 }}</option>
+                                    <option value="{{ parameter.1 }}">{{ parameter.1 }}</option>
                                     {% endfor %}
                                 </select>
                               </div>
@@ -31,7 +31,7 @@
                                 <span class="input-group-text">Type</span>
                                 <select name="type" id="id_type" class="form-select">
                                     {% for type in types %}
-                                    <option value="{{ type.0 }}">{{ type.0 }}</option>
+                                    <option value="{{ type.1 }}">{{ type.1 }}</option>
                                     {% endfor %}
                                 </select>
                               </div>
@@ -68,8 +68,8 @@
                                 <select name="parameter" id="id_parameter_create" class="form-select">
                                     <option selected>{{form_edit.initial.parameter}}</option>
                                     {% for parameter in parameters %}
-                                    {% if form_edit.initial.parameter != parameter.0 %}
-                                    <option value="{{ parameter.0 }}">{{ parameter.0 }}</option>
+                                    {% if form_edit.initial.parameter != parameter.1 %}
+                                    <option value="{{ parameter.1 }}">{{ parameter.1 }}</option>
                                     {% endif %}
                                     {% endfor %}
                                 </select>
@@ -79,7 +79,7 @@
                                 <select name="type" id="id_type" class="form-select">
                                     <option selected>{{form_edit.initial.type}}</option>
                                     {% for type in types %}
-                                    <option value="{{ type.0 }}">{{ type.0 }}</option>
+                                    <option value="{{ type.1 }}">{{ type.1 }}</option>
                                     {% endfor %}
                                 </select>
                               </div>

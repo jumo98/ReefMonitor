@@ -27,6 +27,7 @@ if INFLUX_TOKEN == None or INFLUX_TOKEN == "":
 MAILJET_KEY = os.environ.get("MAILJET_KEY")
 MAILJET_SECRET = os.environ.get("MAILJET_SECRET")
 
+
 # REST API 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -38,6 +39,9 @@ REST_FRAMEWORK = {
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = str(BASE_DIR.joinpath('sent_emails'))
 
 
 # Quick-start development settings - unsuitable for production

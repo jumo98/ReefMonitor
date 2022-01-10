@@ -6,8 +6,13 @@ register = template.Library()
 
 @register.filter(name='hash')
 def hash(map, key):
-    print(map)
     return map[key]
+
+@register.filter(name='displaychoice')
+def displaychoice(array, name):
+    for choice in array:
+        if choice[0] == name:
+            return choice[1]
 
 @register.filter(name='value')
 def value(map, key):

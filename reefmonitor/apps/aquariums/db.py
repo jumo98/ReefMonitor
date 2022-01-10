@@ -1,37 +1,42 @@
-from datetime import datetime
-import time
+
 
 from django.conf import settings
 from django.utils import timezone
 
+from ..aquariums.models import Measurement, Parameter
+
+from datetime import datetime
+import time
+from typing import List
+
 from influxdb_client import InfluxDBClient, BucketRetentionRules, Point
 from influxdb_client.rest import ApiException
 from influxdb_client.client.write_api import SYNCHRONOUS
-from influxdb_client.client.flux_table import FluxStructureEncoder
-
-from reefmonitor.apps.aquariums.models import Measurement, Parameter
-
 
 class TimeseriesDatabase():
     def __init__(self, name, id):
-        self.client = InfluxDBClient(
-            url=settings.INFLUX_URL, token=settings.INFLUX_TOKEN, org=settings.INFLUX_ORG)
+        # Initialize clients and apis
+        self.client = InfluxDBClient(url=settings.INFLUX_URL, token=settings.INFLUX_TOKEN, org=settings.INFLUX_ORG)
         self.write_api = self.client.write_api(write_options=SYNCHRONOUS)
         self.query_api = self.client.query_api()
         self.buckets_api = self.client.buckets_api()
         self.bucket = name + "-" + id
 
+        # Try to find own bucket
         bucket = self.buckets_api.find_bucket_by_name(self.bucket)
 
+        # If no bucket exists, create a new one
         if bucket == None:
             try:
-                retention = BucketRetentionRules(
-                    type="expires", every_seconds=15552000)
+                # 180 days retention
+                retention = BucketRetentionRules(type="expires", every_seconds=15552000)
                 self.buckets_api.create_bucket(bucket_name=self.bucket,
                                                retention_rules=retention,
                                                org=settings.INFLUX_ORG)
-            except ApiException as err:
-                print(err)
+            except ApiException:
+                # If we cant connect, we just pass 
+                pass
+
 
     def AddMeasurement(self, measurement: Measurement):
         points = []
@@ -45,16 +50,18 @@ class TimeseriesDatabase():
             self.write_api.write(bucket=self.bucket, record=p,
                                  record_measurement_key="Parameters")
 
+
     def GetMeasurements(self, start_time, end_time):
         start = datetime_from_local_to_utc(
             start_time).strftime("%Y-%m-%dT%H:%M:%SZ")
         end = datetime_from_local_to_utc(
             end_time).strftime("%Y-%m-%dT%H:%M:%SZ")
 
+        # Build query
         query = f"from(bucket:\"{self.bucket}\") |> range(start: {start}, stop: {end})"
-        print(query)
         tables = self.query_api.query(query)
 
+        # Parse to measurement object
         measurements = {}
         for table in tables:
             for row in table.records:
@@ -71,7 +78,7 @@ class TimeseriesDatabase():
 
         return measurements
 
-    def GetLatestMeasurements(self):
+    def GetLatestMeasurements(self) -> List[Measurement]:
         query = build_latest_query(self.bucket)
         tables = self.query_api.query(query)
 

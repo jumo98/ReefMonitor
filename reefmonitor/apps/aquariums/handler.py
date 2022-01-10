@@ -1,20 +1,21 @@
 from django.utils import timezone
 
-from reefmonitor.apps.notifications.handler import NotificationHandler
+from ..notifications.handler import NotificationHandler
+from ..rules.models import Rule, Violation
 from .models import Aquarium, Measurement
 from .db import TimeseriesDatabase
 
-from ..rules.models import Rule, Violation
+from typing import List
 
 class Handler():
     def __init__(self, id):
         self.aquarium: Aquarium = Aquarium.objects.get(id=id)
         self.db = TimeseriesDatabase(self.aquarium.name, self.aquarium.id)
 
-    def GetMeasurements(self, start_time, end_time):
+    def GetMeasurements(self, start_time, end_time) -> List[Measurement]:
         return self.db.GetMeasurements(start_time, end_time)
 
-    def GetLatestMeasurements(self):
+    def GetLatestMeasurements(self) -> List[Measurement]:
         return self.db.GetLatestMeasurements()
 
     def AddMeasurement(self, measurement: Measurement):

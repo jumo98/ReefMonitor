@@ -1,6 +1,9 @@
 # Create your views here.
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.messages.views import SuccessMessageMixin
 from .forms import LoginForm, SignUpForm
 
 
@@ -23,7 +26,7 @@ def login_view(request):
         else:
             msg = 'Error validating the form'
 
-    return render(request, "auth/login.html", {"form": form, "msg": msg})
+    return render(request, "registration/login.html", {"form": form, "msg": msg})
 
 
 def register_user(request):
@@ -53,9 +56,20 @@ def register_user(request):
     else:
         form = SignUpForm()
 
-    return render(request, "auth/register.html", {"form": form, "msg": msg, "success": success})
+    return render(request, "registration/register.html", {"form": form, "msg": msg, "success": success})
+
 
 
 def logout_view(request):
     logout(request)
     return redirect("/")
+
+class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
+    template_name = 'registration/password_reset.html'
+    email_template_name = 'registration/password_reset_email.html'
+    subject_template_name = 'registration/password_reset_subject.txt'
+    success_message = "We've emailed you instructions for setting your password, " \
+                      "if an account exists with the email you entered. You should receive them shortly." \
+                      " If you don't receive an email, " \
+                      "please make sure you've entered the address you registered with, and check your spam folder."
+    success_url = reverse_lazy('login')
