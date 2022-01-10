@@ -46,3 +46,15 @@ class Violation(models.Model):
     timestamp = models.DateTimeField()
     value = models.FloatField()
 
+class Hint(models.Model):
+    class Meta:
+        verbose_name = "Hint"
+        verbose_name_plural = "Hints"
+
+    id = models.CharField(max_length=100, blank=True, unique=True, default=uuid.uuid4, primary_key=True)
+    parameter = models.CharField(max_length=48, choices=Parameter.Name.choices)
+    type = models.CharField(max_length=48, choices=Rule.Type.choices)
+    hint = models.CharField(max_length=4096)
+
+    def GetHint(self):
+        return self.hint

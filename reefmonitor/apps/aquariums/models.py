@@ -1,3 +1,4 @@
+from django.utils import timezone
 import uuid
 from django.db import models
 from django.contrib.auth.models import User
@@ -7,6 +8,12 @@ class Aquarium(models.Model):
     class Meta: 
         verbose_name = "Aquarium"
         verbose_name_plural = "Aquariums"
+
+    def create(name, owner):
+        aq = Aquarium(name=name, owner=owner, create_date=timezone.now(), update_date=timezone.now())
+        aq.save()
+        return aq
+        
 
     name = models.CharField(max_length=24)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
