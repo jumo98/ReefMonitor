@@ -33,19 +33,19 @@ class Parameter(models.Model):
         verbose_name_plural = "Parameters"
 
     class Name(models.TextChoices):
-        SALI = 'salinity', 'Salinity'
-        TEMP = 'temperature', 'Temperature'
-        CARB = 'carbonate', 'Carbonate Hardness'
-        CALC = 'calcium', 'Calcium'
-        MAGN = 'magnesium', 'Magnesium'
+        SALI = 'Salinity', 'Salinity'
+        TEMP = 'Temperature', 'Temperature'
+        CARB = 'Carbonate Hardness', 'Carbonate Hardness'
+        CALC = 'Calcium', 'Calcium'
+        MAGN = 'Magnesium', 'Magnesium'
 
     
     class Units(models.TextChoices):
-        SALI = 'salinity', 'g/l'
-        TEMP = 'temperature', '°C'
-        CARB = 'carbonate', 'KH'
-        CALC = 'calcium', 'ppm'
-        MAGN = 'magnesium', 'ppm'
+        SALI = 'Salinity', 'g/l'
+        TEMP = 'Temperature', '°C'
+        CARB = 'Carbonate Hardness', 'KH'
+        CALC = 'Calcium', 'ppm'
+        MAGN = 'Magnesium', 'ppm'
 
     name = models.CharField(max_length=48, choices=Name.choices, default=Name.TEMP)
     value = models.FloatField()

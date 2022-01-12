@@ -46,6 +46,13 @@ class Violation(models.Model):
     timestamp = models.DateTimeField()
     value = models.FloatField()
 
+    def RetrieveHint(self):
+        try:
+            hint = Hint.objects.get(parameter=self.rule.parameter, type=self.rule.type)
+            return hint.GetMessage()
+        except:
+            return ""
+
 class Hint(models.Model):
     class Meta:
         verbose_name = "Hint"

@@ -49,11 +49,11 @@
                         <div class="form-group mb-4" style="display: none;" id="salinity-input">
                             <div class="input-group">
                                 <span class="input-group-text" id="salinity">
-                                {{ parameter_names|displaychoice:"salinity" }}
+                                {{ parameter_names|displaychoice:"Salinity" }}
                                 </span>
                                 {{ form.salinity }}
                                 <span class="input-group-text">
-                                {{ parameter_units|displaychoice:"salinity" }}
+                                {{ parameter_units|displaychoice:"Salinity" }}
                                 </span>
                             </div>
                         </div>
@@ -61,11 +61,11 @@
                         <div class="form-group mb-4" style="display: none;" id="temp-input">
                             <div class="input-group">
                                 <span class="input-group-text" id="temperature">
-                                {{ parameter_names|displaychoice:"temperature"}}
+                                {{ parameter_names|displaychoice:"Temperature"}}
                                 </span>
                                 {{ form.temperature }}
                                 <span class="input-group-text">
-                                {{ parameter_units|displaychoice:"temperature"}}
+                                {{ parameter_units|displaychoice:"Temperature"}}
                                 </span>
                             </div>
                         </div>
@@ -73,11 +73,11 @@
                         <div class="form-group mb-4" style="display: none;" id="carb-input">
                             <div class="input-group">
                                 <span class="input-group-text" id="carbonate">
-                                {{ parameter_names|displaychoice:"carbonate"}}
+                                {{ parameter_names|displaychoice:"Carbonate Hardness"}}
                                 </span>
                                 {{ form.carbonate }}
                                 <span class="input-group-text">
-                                {{ parameter_units|displaychoice:"carbonate"}}
+                                {{ parameter_units|displaychoice:"Carbonate Hardness"}}
                                 </span>
                             </div>
                         </div>
@@ -85,11 +85,11 @@
                         <div class="form-group mb-4" style="display: none;" id="calcium-input">
                             <div class="input-group">
                                 <span class="input-group-text" id="calcium">
-                                {{ parameter_names|displaychoice:"calcium"}}
+                                {{ parameter_names|displaychoice:"Calcium"}}
                                 </span>
                                 {{ form.calcium }}
                                 <span class="input-group-text">
-                                {{ parameter_units|displaychoice:"calcium"}}
+                                {{ parameter_units|displaychoice:"Calcium"}}
                                 </span>
                             </div>
                         </div>
@@ -97,11 +97,11 @@
                         <div class="form-group mb-4" style="display: none;" id="magnesium-input">
                             <div class="input-group">
                                 <span class="input-group-text" id="magnesium">
-                                {{ parameter_names|displaychoice:"magnesium"}}
+                                {{ parameter_names|displaychoice:"Magnesium"}}
                                 </span>
                                 {{ form.magnesium }}
                                 <span class="input-group-text">
-                                {{ parameter_units|displaychoice:"magnesium"}}
+                                {{ parameter_units|displaychoice:"Magnesium"}}
                                 </span>
                             </div>
                         </div>
@@ -165,7 +165,7 @@
     
     <div class="row row-cols-1 row-cols-md-2">
     {% for key, label in parameter_names %}
-    
+        {% if parameters_dict|hash:key %}
         <div class="col">
             <div class="card shadow p-3 mb-3 bg-white rounded">
                 <div class="card-body">
@@ -181,6 +181,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
     {% endfor %}
     </div>
 </div>

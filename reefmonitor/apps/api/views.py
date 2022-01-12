@@ -16,7 +16,7 @@ class SwaggerView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        f = open('static/swagger.json', 'r')
+        f = open('static/swagger/swagger.json', 'r')
         data = json.load(f)
         return JsonResponse(data, safe=False)
 
@@ -43,7 +43,7 @@ class MeasurementView(APIView):
         if serializer.is_valid():
             measurement = serializer.save()
             handler = Handler(id)
-            handler.AddMeasurement(measurement)
+            handler.AddMeasurement(measurement=measurement, external=True)
             measurement.delete()
             return Response(serializer.validated_data, status=status.HTTP_201_CREATED)
 

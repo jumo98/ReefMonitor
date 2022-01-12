@@ -1,6 +1,6 @@
 {% extends "dashboard/base.html" %}
 
-{% block title %} Rules {% endblock %}
+{% block title %} Analyze {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -12,7 +12,7 @@
 <div class="p-4 ">
     <div class="row">
         <div class="col">
-            <div class="card shadow p-3 mb-3 bg-white rounded h-auto">
+            <div class="card shadow p-3 mb-3 bg-white rounded  overflow-auto">
                 <div class="card-body overflow-auto">
                     <h5 class="card-title"> Violations for {{ aquarium.name }} </h5>
                     <hr>
@@ -24,6 +24,7 @@
                                 <th scope="col">Type</th>
                                 <th scope="col">Expected Value</th>
                                 <th scope="col">Measured Value</th>
+                                <th scope="col">Hint</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -34,6 +35,13 @@
                                 <td>{{ violation.rule.type }}</td>
                                 <td>{{ violation.rule.value }}</td>
                                 <td>{{ violation.value }}</td>
+                                <td> 
+                                    {% if violation.RetrieveHint %}
+                                    <a tabindex="0" role="button" class="btn btn-secondary" data-bs-trigger="focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="left" data-bs-content="{{ violation.RetrieveHint }}">
+                                    Show Hint
+                                    </a>
+                                    {% endif %}
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -48,4 +56,14 @@
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+<script>
+var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+  return new bootstrap.Popover(popoverTriggerEl, {
+    html: true,
+  })
+})
+</script>
+
+{% endblock javascripts %}

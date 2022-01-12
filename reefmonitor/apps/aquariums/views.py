@@ -54,6 +54,9 @@ def home_view(request):
         "query": seven_days_query_param()
     }
 
+    
+    context['parameter_units'] = Parameter.Units.choices
+
     return render(request, "dashboard/home.html", context)
 
 
@@ -101,7 +104,11 @@ def overview_view(request, aquarium_id):
     # Get currently selected aquarium and open db connection to retrieve measurements from selected time range
     handler = Handler(aquarium_id)
     parameters = handler.GetMeasurements(time_start, time_end)
+
+    # Data for visualizing available parameters
     context['parameters_dict'] = parameters
+
+    # Data for building graphs
     context['parameters'] = json.dumps(parameters)
 
     # Handle measurement form
@@ -114,7 +121,7 @@ def overview_view(request, aquarium_id):
             timestamp = datetime.strptime(datetime_str, '%Y-%m-%dT%H:%M:%SZ')
 
             measurement = form.ToMeasurement(time_to_local(timestamp))
-            handler.AddMeasurement(measurement)
+            handler.AddMeasurement(measurement=measurement, external=False)
             measurement.delete()
         else:
             print("Form not valid")

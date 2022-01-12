@@ -18,11 +18,12 @@ class Handler():
     def GetLatestMeasurements(self) -> List[Measurement]:
         return self.db.GetLatestMeasurements()
 
-    def AddMeasurement(self, measurement: Measurement):
+    def AddMeasurement(self, measurement: Measurement, external: bool):
         self.db.AddMeasurement(measurement)
 
         notifyHandler = NotificationHandler(self.aquarium)
 
+        
         for param in measurement.parameters.all():
             rules = Rule.objects.filter(aquarium=self.aquarium, parameter=param.name)
             for rule in rules:
@@ -30,7 +31,9 @@ class Handler():
                     # Create new violation
                     violation = Violation(aquarium=self.aquarium, rule=rule, timestamp=timezone.now(), value=param.value)
                     violation.save()
-                    notifyHandler.SendNotification(violation)
+
+                    if external:
+                        notifyHandler.SendNotification(violation)
 
         self.aquarium.update_date = timezone.now()
         self.aquarium.save()

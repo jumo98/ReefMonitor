@@ -1,3 +1,4 @@
+// Colors for the charts
 var chartColors = {
     "Salinity": '#0D6EFD',
     "Temperature": '#6C757D',
@@ -6,9 +7,7 @@ var chartColors = {
     "Magnesium": '#FFC107',
 };
 
-var init = false;
-
-
+// Options for the charts
 const options = {
     plugins: {
         legend: {
@@ -30,20 +29,20 @@ const options = {
     }
 }
 
-window.onload = function () {
-};
-
 $(document).ready(function () {
+    // Initialize date and time buttons according to passed time
     $('#input-start-time').val(moment(time_start).format('HH:mm:ss'))
     $('#input-start-date').val(moment(time_start).format('yyyy-MM-DD'))
     $('#input-end-time').val(moment(time_end).format('HH:mm:ss'))
     $('#input-end-date').val(moment(time_end).format('yyyy-MM-DD'))
 
+    // Button for setting time to now
     $("#button-end-time").click(function () {
         $('#input-end-time').val(moment().format('HH:mm:ss'))
         reload()
     });
 
+    // Button for setting date to now
     $("#button-end-date").click(function () {
         $('#input-end-date').val(moment().format('yyyy-MM-DD'))
         reload()
@@ -57,6 +56,7 @@ $(document).ready(function () {
     loadCharts()
 })
 
+// Reload page with new date set as query params
 function reload() {
     start_time = $('#input-start-date').val() + 'T' + $('#input-start-time').val()
     end_time = $('#input-end-date').val() + 'T' + $('#input-end-time').val()
@@ -66,12 +66,14 @@ function reload() {
 }
 
 function loadCharts() {
+    // Parse handed over measurement
     parametersJson = JSON.parse(parameters)
     params = {}
 
     var start = moment(time_start, 'yyyy-MM-DD HH:mm:ss');
     var end = moment(time_end, 'yyyy-MM-DD HH:mm:ss');
 
+    // Parse data into chart.js handleable format
     for (let [param, values] of Object.entries(parametersJson)) {
         values.forEach(datapoint => {
             if (!(param in params)) {
@@ -92,8 +94,7 @@ function loadCharts() {
         params[param]["moments"].push(end)
     }
 
-    configs = []
-
+    // Create a chart config for each handled parameter
     for (let [name, param] of Object.entries(params)) {
         let data = {
             labels: param.timestamps,
@@ -112,21 +113,16 @@ function loadCharts() {
             type: 'line',
             data: data,
             responsive: true,
-            // backgroundColor: 'rgb(102, 252, 241)',
             options: options,
         };
 
-        // if (!(init)) {
-
-        // } else {
-        //     let myChart = document.getElementById('chart-' + name)
-        //     myChart.update();
-        // }
+        // Find and destroy old chart, if exists
         let chartStatus = Chart.getChart('chart-' + name); // <canvas> id
         if (chartStatus != undefined) {
             chartStatus.destroy();
         }
 
+        // Create a new chart
         var ctx = document.getElementById('chart-' + name).getContext('2d');
         let myChart = new Chart(ctx, config);
         myChart.update();

@@ -6,7 +6,9 @@ register = template.Library()
 
 @register.filter(name='hash')
 def hash(map, key):
-    return map[key]
+    if key in map.keys():
+        return map[key] 
+    return None
 
 @register.filter(name='displaychoice')
 def displaychoice(array, name):

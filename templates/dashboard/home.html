@@ -20,36 +20,37 @@
                     
                     
                     {% define aquarium.id as id %}
+                    {% if latest|hash:id %}
                     <hr>
                     <div>
-                        <p class="card-text"> Current Values</p>
+                        <!-- <p class="card-text"> Current Values</p> -->
                         {% for measurement in latest|hash:id %}
 
                         {% if measurement == "Salinity" %}
                         <span class="d-inline-block mb-2" data-toggle="tooltip"
                             title="{{ latest|hash:id|timestamp:measurement }}">
-                            <button type="button" class="btn btn-primary">Salinity: {{ latest|hash:id|value:measurement}} </button>
+                            <button type="button" class="btn btn-primary">Salinity: {{ latest|hash:id|value:measurement}} {{ parameter_units|displaychoice:measurement }}</button>
                         </span>
                         {% endif %}
 
                         {% if measurement == "Temperature" %}
                         <span class="d-inline-block mb-2" data-toggle="tooltip"
                             title="{{ latest|hash:id|timestamp:measurement }}">
-                            <button type="button" class="btn btn-secondary">Temperature: {{latest|hash:id|value:measurement }} </button>
+                            <button type="button" class="btn btn-secondary">Temperature: {{latest|hash:id|value:measurement }} {{ parameter_units|displaychoice:measurement }}</button>
                         </span>
                         {% endif %}
 
                         {% if measurement == "Carbonate Hardness" %}
                         <span class="d-inline-block mb-2" data-toggle="tooltip"
                             title="{{ latest|hash:id|timestamp:measurement }}">
-                            <button type="button" class="btn btn-success">Carbonate Hardness: {{latest|hash:id|value:measurement }} </button>
+                            <button type="button" class="btn btn-success">Carbonate Hardness: {{latest|hash:id|value:measurement }} {{ parameter_units|displaychoice:measurement }}</button>
                         </span>
                         {% endif %}
 
                         {% if measurement == "Calcium" %}
                         <span class="d-inline-block mb-2" data-toggle="tooltip"
                             title="{{ latest|hash:id|timestamp:measurement }}">
-                            <button type="button" class="btn btn-danger">Calcium: {{ latest|hash:id|value:measurement }}
+                            <button type="button" class="btn btn-danger">Calcium: {{ latest|hash:id|value:measurement }} {{ parameter_units|displaychoice:measurement }}
                             </button>
                         </span>
                         {% endif %}
@@ -57,7 +58,7 @@
                         {% if measurement == "Magnesium" %}
                         <span class="d-inline-block mb-2" data-toggle="tooltip"
                             title="{{ latest|hash:id|timestamp:measurement }}">
-                            <button type="button" class="btn btn-warning">Magnesium: {{ latest|hash:id|value:measurement}} </button>
+                            <button type="button" class="btn btn-warning">Magnesium: {{ latest|hash:id|value:measurement}} {{ parameter_units|displaychoice:measurement }}</button>
                         </span>
                         {% endif %}
 
@@ -65,7 +66,7 @@
 
 
                     </div>
-                    
+                    {% endif %}
                     
                     
                 </div>
