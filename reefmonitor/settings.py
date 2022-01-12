@@ -68,8 +68,6 @@ INSTALLED_APPS = [
     'reefmonitor.apps.notifications',
 
     'rest_framework',
-    'rest_framework_swagger',
-    # 'django_extensions',
     
     'django.contrib.admin',
     'django.contrib.auth',

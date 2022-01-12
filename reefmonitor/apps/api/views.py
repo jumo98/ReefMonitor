@@ -1,3 +1,4 @@
+import json
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -9,6 +10,15 @@ from django.http import JsonResponse
 from ..aquariums.serializers import AquariumSerializer, MeasurementSerializer
 from ..aquariums.models import Aquarium
 from ..aquariums.handler import Handler
+
+class SwaggerView(APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        f = open('static/swagger.json', 'r')
+        data = json.load(f)
+        return JsonResponse(data, safe=False)
 
 class AquariumView(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]

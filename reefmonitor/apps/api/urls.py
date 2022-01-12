@@ -1,12 +1,14 @@
 from django.urls import path
-from django.conf.urls import url
-from .views import AquariumView, MeasurementView
-from rest_framework_swagger.views import get_swagger_view
-
-schema_view = get_swagger_view(title='Pastebin API')
+from django.views.generic import TemplateView
+from .views import AquariumView, MeasurementView, SwaggerView
 
 urlpatterns = [
-    path('doc', schema_view),
+    path('doc', TemplateView.as_view(
+        template_name='api/swagger-ui.html',
+        extra_context={'schema_url':'openapi-schema'}
+    ), name='doc'),
+    path('openapi-schema', SwaggerView.as_view(), name='openapi-schema'),
+    
     path('aquariums/', AquariumView.as_view()),
     path('aquariums/<str:id>', AquariumView.as_view()),
     path('aquariums/<str:id>/measurements', MeasurementView.as_view())

@@ -18,7 +18,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('reefmonitor.apps.api.urls')),
+    path('api/v1/', include('reefmonitor.apps.api.urls')),
     path("", include("reefmonitor.apps.users.urls")), 
     path("", include("reefmonitor.apps.aquariums.urls")),
     path("", include("reefmonitor.apps.rules.urls")),
