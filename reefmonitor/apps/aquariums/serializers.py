@@ -3,14 +3,6 @@ from drf_writable_nested.serializers import WritableNestedModelSerializer
 
 from .models import Aquarium, Measurement, Parameter
 
-PARAMETER_CHOICES = [
-    'salinity',
-    'temperature',
-    'carbonate',
-    'calcium',
-    'magnesium',
-]
-
 class AquariumSerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=24)
     owner = serializers.SlugRelatedField(

@@ -27,6 +27,8 @@ class AquariumView(APIView):
     def get(self, request, id=None):
         if id:
             aquarium = Aquarium.objects.get(id=id)
+            if aquarium.owner != request.user:
+                return Response(data="Access to this aquarium is forbidden. Wrong user.", status=status.HTTP_403_FORBIDDEN)
             serializer = AquariumSerializer(aquarium)
             return JsonResponse(serializer.data, safe=False)
         aquariums = Aquarium.objects.filter(owner=request.user)
@@ -39,6 +41,10 @@ class MeasurementView(APIView):
 
     def post(self, request, id=None):
         serializer = MeasurementSerializer(data=request.data)
+
+        aquarium = Aquarium.objects.get(id=id)
+        if aquarium.owner != request.user:
+            return Response(data="Access to this aquarium is forbidden. Wrong user.", status=status.HTTP_403_FORBIDDEN)
         
         if serializer.is_valid():
             measurement = serializer.save()

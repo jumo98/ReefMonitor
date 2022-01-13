@@ -23,9 +23,18 @@ INFLUX_TOKEN = os.environ.get("INFLUX_TOKEN")
 if INFLUX_TOKEN == None or INFLUX_TOKEN == "":
     INFLUX_TOKEN = "adminadminadmin"
 
-# Mailjet
-MAILJET_KEY = os.environ.get("MAILJET_KEY")
-MAILJET_SECRET = os.environ.get("MAILJET_SECRET")
+# Mail
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.strato.de")
+EMAIL_PORT = os.environ.get("EMAIL_PORT", 465)
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_SENDER = EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_SSL = True
+
+
 
 
 # REST API 
@@ -39,9 +48,6 @@ REST_FRAMEWORK = {
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-EMAIL_FILE_PATH = str(BASE_DIR.joinpath('sent_emails'))
 
 
 # Quick-start development settings - unsuitable for production

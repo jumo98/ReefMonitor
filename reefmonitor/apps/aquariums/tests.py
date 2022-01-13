@@ -46,7 +46,7 @@ class MeasurementTestCase(TestCase):
     def test_get_parameters(self):
         parameters = self.measurement.parameters.all()
         for parameter in parameters:
-            if parameter.name == "salinity":
+            if parameter.name == "Salinity":
                 self.assertEqual(parameter, self.parameter_salinity)
             else:
                 self.assertEqual(parameter, self.parameter_temperature)

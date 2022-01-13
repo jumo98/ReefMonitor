@@ -9,7 +9,7 @@ class NotificationHandler():
     def __init__(self, aquarium):
         self.aquarium = aquarium
         self.notifiers = []
-        # self.notifiers.append(EMailHandler())
+        self.notifiers.append(EMailHandler())
 
     def SendNotification(self, violation: Violation):
         # Check for an existing timeout
@@ -33,7 +33,7 @@ class NotificationHandler():
 
         if timeout == None:
             for notifier in self.notifiers:
-                notifier.Send([violation])
+                notifier.Send(user=self.aquarium.owner, violations=[violation])
             timeout = Timeout(aquarium=self.aquarium, start=timezone.now(), duration=timedelta(minutes=30))
             timeout.save()
             timeout.AddViolation(violation)

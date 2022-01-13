@@ -23,7 +23,6 @@ class Handler():
 
         notifyHandler = NotificationHandler(self.aquarium)
 
-        
         for param in measurement.parameters.all():
             rules = Rule.objects.filter(aquarium=self.aquarium, parameter=param.name)
             for rule in rules:
