@@ -7,29 +7,9 @@ var chartColors = {
     "Magnesium": '#FFC107',
 };
 
-// Options for the charts
-const options = {
-    plugins: {
-        legend: {
-            display: false
-        },
-    },
-    scales: {
-        x: {
-            type: 'time',
-            grid: {
-                // color: "rgba(50, 22, 22,22)",
-            }
-        },
-        y: {
-            grid: {
-                // color: "rgba(50, 22, 222, 22)",
-            }
-        }
-    }
-}
-
 $(document).ready(function () {
+    // Parse parameter units
+    parameterUnits = JSON.parse(parameters_units_json)
     // Initialize date and time buttons according to passed time
     $('#input-start-time').val(moment(time_start).format('HH:mm:ss'))
     $('#input-start-date').val(moment(time_start).format('yyyy-MM-DD'))
@@ -113,7 +93,7 @@ function loadCharts() {
             type: 'line',
             data: data,
             responsive: true,
-            options: options,
+            options: getOptions(findUnit(name)),
         };
 
         // Find and destroy old chart, if exists
@@ -128,4 +108,42 @@ function loadCharts() {
         myChart.update();
 
     }
+}
+
+function findUnit(targetParameter) {
+    unit = parameterUnits.find((element) => {
+        if (element[0] == targetParameter) {
+            return element
+        }
+    })
+    if (unit) {
+        return unit[1]
+    }
+    return "N/A"
+}
+
+function getOptions(unit) {
+    let options = {
+        plugins: {
+            legend: {
+                display: false
+            },
+        },
+        scales: {
+            x: {
+                type: 'time',
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: unit,
+                    font: {
+                        size: 16
+                    }
+                }
+            }
+        }
+    }
+
+    return options
 }

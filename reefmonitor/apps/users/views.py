@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from .forms import LoginForm, SignUpForm
@@ -42,15 +43,16 @@ def register_user(request):
             raw_password = form.cleaned_data.get("password1")
             raw_password_2 = form.cleaned_data.get("password2")
             if (raw_password == raw_password_2): 
+                existing_users = User.objects.filter(email=email)
+                if existing_users.count() > 0:
+                    msg = 'There already exists a user with this email.'
+                    return render(request, "registration/register.html", {"form": form, "msg": msg, "success": success})
                 user = authenticate(username=username, password=raw_password, email=email)
                 msg = 'User created - please <a href="/login">login</a>.'
                 success = True
                 return redirect("/login/")
             else:
                 msg = 'Passwords do not match'
-
-            
-
         else:
             msg = 'Form is not valid'
     else:

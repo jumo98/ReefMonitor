@@ -69,6 +69,12 @@
                         "schema": {
                             "$ref": "#/definitions/Aquarium"     
                         }
+                    },
+                    "403": {
+                        "description": "No access to this aquarium."
+                    },
+                    "404": {
+                        "description": "Aquarium was not found."
                     }
                 },
                 "security": [
@@ -111,11 +117,20 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "successful operation",
+                    "201": {
+                        "description": "Measurement was created successfully",
                         "schema": {
                             "$ref": "#/definitions/Measurement"
                         }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "403": {
+                        "description": "No access to this aquarium."
+                    },
+                    "404": {
+                        "description": "Aquarium was not found."
                     }
                 },
                 "security": [

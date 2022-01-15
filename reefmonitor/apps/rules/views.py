@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from reefmonitor.apps.notifications.email import EMailHandler
@@ -24,6 +25,7 @@ def rules_view(request, aquarium_id):
     context["aquarium"] = aquarium
 
     context["parameters"] = Parameter.Name.choices
+    context['parameters_units'] = json.dumps(Parameter.Units.choices)
     context["types"] = Rule.Type.choices
 
     id = request.GET.get("id")

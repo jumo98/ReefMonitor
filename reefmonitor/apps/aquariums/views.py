@@ -85,6 +85,7 @@ def overview_view(request, aquarium_id):
     context = {}
     context['parameter_names'] = Parameter.Name.choices
     context['parameter_units'] = Parameter.Units.choices
+    context['parameter_units_json'] = json.dumps(Parameter.Units.choices)
 
     # Retrieve time range from query params
     time_end = datetime.fromisoformat(request.GET.get('end', datetime.now().isoformat()))
@@ -123,9 +124,9 @@ def overview_view(request, aquarium_id):
             measurement = form.ToMeasurement(time_to_local(timestamp))
             handler.AddMeasurement(measurement=measurement, external=False)
             measurement.delete()
+            context['time_end'] = timezone.now()
         else:
             print("Form not valid")
-        #return redirect("/" + aquarium_id + "/overview")
         return render(request, "dashboard/overview.html", context)
 
     return render(request, "dashboard/overview.html", context)

@@ -26,9 +26,12 @@ class AquariumView(APIView):
 
     def get(self, request, id=None):
         if id:
-            aquarium = Aquarium.objects.get(id=id)
+            try:
+                aquarium = Aquarium.objects.get(id=id)
+            except Aquarium.DoesNotExist:
+                return Response(data="Aquarium was not found.", status=status.HTTP_404_NOT_FOUND)
             if aquarium.owner != request.user:
-                return Response(data="Access to this aquarium is forbidden. Wrong user.", status=status.HTTP_403_FORBIDDEN)
+                return Response(data="No access to this aquarium.", status=status.HTTP_403_FORBIDDEN)
             serializer = AquariumSerializer(aquarium)
             return JsonResponse(serializer.data, safe=False)
         aquariums = Aquarium.objects.filter(owner=request.user)
@@ -42,12 +45,17 @@ class MeasurementView(APIView):
     def post(self, request, id=None):
         serializer = MeasurementSerializer(data=request.data)
 
-        aquarium = Aquarium.objects.get(id=id)
+        try:
+            aquarium = Aquarium.objects.get(id=id)
+        except Aquarium.DoesNotExist:
+            return Response(data="Aquarium was not found.", status=status.HTTP_404_NOT_FOUND)
         if aquarium.owner != request.user:
-            return Response(data="Access to this aquarium is forbidden. Wrong user.", status=status.HTTP_403_FORBIDDEN)
+            return Response(data="No access to this aquarium.", status=status.HTTP_403_FORBIDDEN)
         
         if serializer.is_valid():
             measurement = serializer.save()
+            if not measurement.ValidParameters():
+                return Response("Duplicate parameters set", status=status.HTTP_400_BAD_REQUEST)
             handler = Handler(id)
             handler.AddMeasurement(measurement=measurement, external=True)
             measurement.delete()

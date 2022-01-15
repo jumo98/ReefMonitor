@@ -88,16 +88,25 @@
                 </li>
 
                 {% empty %}
-                <li>
-                    <a href="#" class="nav-link text-white">
-                        <i class="bi bi-droplet"></i>
-                        Create new aquarium
+                <li class="nav-item">
+                    <a href="#" class="nav-link text-decoration-none text-white ">
+                        <i class="bi bi-droplet pe-2"></i>
+                        Add new aquarium
                     </a>
                 </li>
                 {% endfor %}
 
             </ul>
 
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+                    <a href="/api/v1/doc" class="nav-link text-decoration-none text-white ">
+                        <i class="bi bi-globe pe-2"></i>
+                        SwaggerUI
+                    </a>
+                </li>
+            </ul>
+            
             <hr>
             <div class="dropdown">
                 <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
@@ -106,10 +115,7 @@
                     <strong>{{ request.user.username }}</strong>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                    <li><a class="dropdown-item" href="/settings">Settings</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
+
                     <li><a class="dropdown-item" href="/logout">Sign out</a></li>
                 </ul>
             </div>

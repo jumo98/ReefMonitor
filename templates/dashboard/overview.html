@@ -196,6 +196,7 @@
 <script src="{% static 'js/graph.js' %}"></script>
 <script>
     var parameters = "{{ parameters | escapejs }}";
+    var parameters_units_json = "{{ parameter_units_json | escapejs }}";
     var time_start = "{{ time_start | escapejs }}";
     var time_end = "{{ time_end | escapejs }}";
 </script>

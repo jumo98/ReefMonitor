@@ -1,20 +1,28 @@
-let map = {
-    "Temperature": "°C",
-    "Carbonate Hardness": "KH",
-    "Calcium": "ppm",
-    "Magnesium": "ppm",
-    "Salinity": "mg/l",
-}
-
 $(document).ready(function () {
-    $("#create-value").html(map[$("#id_parameter").val()])
-    $("#edit-value").html(map[$("#id_parameter_create").val()])
+    parameterUnits = JSON.parse(parameters_units)
+    param = $("#id_parameter").val()
+    unit = findUnit(param)
+    $("#create-value").html(unit)
+    $("#edit-value").html(findUnit($("#id_parameter_create").val()))
 })
 
-$("#id_parameter").change(function() {
-    $("#create-value").html(map[$("#id_parameter").val()])
+$("#id_parameter").change(function () {
+    $("#create-value").html(findUnit($("#id_parameter").val()))
 });
 
-$("#id_parameter_create").change(function() {
-    $("#edit-value").html(map[$("#id_parameter_create").val()])
+$("#id_parameter_create").change(function () {
+    $("#edit-value").html(findUnit($("#id_parameter_create").val()))
 });
+
+function findUnit(targetParameter) {
+    unit = parameterUnits.find((element) => {
+        if (element[0] == targetParameter) {
+            return element
+        }
+    })
+    if (unit) {
+        return unit[1]
+    }
+    return "N/A"
+}
+

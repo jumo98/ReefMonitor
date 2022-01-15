@@ -43,9 +43,9 @@ class Parameter(models.Model):
     class Units(models.TextChoices):
         SALI = 'Salinity', 'g/l'
         TEMP = 'Temperature', '°C'
-        CARB = 'Carbonate Hardness', 'KH'
-        CALC = 'Calcium', 'ppm'
-        MAGN = 'Magnesium', 'ppm'
+        CARB = 'Carbonate Hardness', '°dKH'
+        CALC = 'Calcium', 'mg/l'
+        MAGN = 'Magnesium', 'mg/l'
 
     name = models.CharField(max_length=48, choices=Name.choices, default=Name.TEMP)
     value = models.FloatField()
@@ -70,3 +70,9 @@ class Measurement(models.Model):
     timestamp = models.DateTimeField('timestamp')
     parameters = models.ManyToManyField(Parameter)
 
+    def ValidParameters(self):
+        for parameter in self.parameters.all():
+            if self.parameters.filter(name=parameter.name).count() > 1:
+                return False
+
+        return True

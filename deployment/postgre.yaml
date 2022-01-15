@@ -21,8 +21,10 @@ spec:
             - name: postgres-db-disk
               mountPath: /data
           env:
+            - name: POSTGRES_USER
+              value: 'admin'
             - name: POSTGRES_PASSWORD
-              value: testpassword
+              value: 'H!gLK$V&kR9]3Ntu'
             - name: PGDATA
               value: /data/pgdata
   volumeClaimTemplates:
