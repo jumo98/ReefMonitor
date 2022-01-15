@@ -58,7 +58,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY", "SuperSecr3t")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", True)
 
 ADDITIONAL_HOST = os.environ.get("HOST")
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", ADDITIONAL_HOST]
@@ -127,10 +127,10 @@ WSGI_APPLICATION = 'reefmonitor.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get("POSTGRE_NAME", ""),
-        'USER': os.environ.get("POSTGRE_USER", ""),
+        'NAME': os.environ.get("POSTGRE_NAME", "reefmonitor"),
+        'USER': os.environ.get("POSTGRE_USER", "reefmonitor"),
         'PASSWORD': os.environ.get("POSTGRE_PASSWORD", ""),
-        'HOST': os.environ.get("POSTGRE_HOST", ""),
+        'HOST': os.environ.get("POSTGRE_HOST", "postgre"),
         'PORT': '5432',
     }
 }
