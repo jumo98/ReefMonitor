@@ -43,4 +43,6 @@ workflows:
   release: 
     jobs:
       - build-and-test
-      - build-and-push
+      - build-and-push:
+          requires:
+            - build-and-test
