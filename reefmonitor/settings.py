@@ -130,7 +130,7 @@ DATABASES = {
         'NAME': os.environ.get("POSTGRE_NAME", "reefmonitor"),
         'USER': os.environ.get("POSTGRE_USER", "reefmonitor"),
         'PASSWORD': os.environ.get("POSTGRE_PASSWORD", ""),
-        'HOST': os.environ.get("POSTGRE_HOST", "postgre"),
+        'HOST': os.environ.get("POSTGRE_HOST", "127.0.0.1"),
         'PORT': '5432',
     }
 }
