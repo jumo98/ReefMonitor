@@ -26,19 +26,19 @@ spec:
           value: setup
         - name: DOCKER_INFLUXDB_INIT_USERNAME
           valueFrom:
-          secretKeyRef:
-            name: reefmonitor-config
-            key: INFLUX_USER
+              secretKeyRef:
+                name: reefmonitor-config
+                key: INFLUX_USER
         - name: DOCKER_INFLUXDB_INIT_PASSWORD
           valueFrom:
-          secretKeyRef:
-            name: reefmonitor-config
-            key: INFLUX_PASSWORD
+              secretKeyRef:
+                name: reefmonitor-config
+                key: INFLUX_PASSWORD
         - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
           valueFrom:
-          secretKeyRef:
-            name: reefmonitor-config
-            key: INFLUX_TOKEN
+              secretKeyRef:
+                name: reefmonitor-config
+                key: INFLUX_TOKEN
         - name: DOCKER_INFLUXDB_INIT_ORG
           value: ReefMonitor
         - name: DOCKER_INFLUXDB_INIT_BUCKET
@@ -65,7 +65,6 @@ metadata:
 spec:
   selector:
     app: influxdb
-  type: LoadBalancer
   ports:
     - port: 8086
       targetPort: 8086

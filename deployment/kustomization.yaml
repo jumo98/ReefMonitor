@@ -4,3 +4,5 @@ resources:
 - ./influxdb.yaml
 - ./postgre.yaml
 - ./reefmonitor.yaml
+- ./ingress.yaml
+- ./redirect.yaml

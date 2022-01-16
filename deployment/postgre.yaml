@@ -20,17 +20,18 @@ spec:
           volumeMounts:
             - name: postgres-db-disk
               mountPath: /data
+              readOnly: false
           env:
             - name: POSTGRES_USER
               valueFrom:
-              secretKeyRef:
-                name: reefmonitor-config
-                key: POSTGRE_USER
+                  secretKeyRef:
+                    name: reefmonitor-config
+                    key: POSTGRE_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
-              secretKeyRef:
-                name: reefmonitor-config
-                key: POSTGRE_PASSWORD
+                  secretKeyRef:
+                    name: reefmonitor-config
+                    key: POSTGRE_PASSWORD
             - name: PGDATA
               value: /data/pgdata
   volumeClaimTemplates:
@@ -50,7 +51,6 @@ metadata:
 spec:
   selector:
     app: postgres
-  type: LoadBalancer
   ports:
     - port: 5432
       targetPort: 5432
