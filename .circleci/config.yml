@@ -42,7 +42,13 @@ jobs:
 workflows:
   release: 
     jobs:
-      - build-and-test
+      - build-and-test:
+          filters:
+            tags:
+              only: /.*/
       - build-and-push:
+          filters:
+            tags:
+              only: /.*/
           requires:
             - build-and-test
