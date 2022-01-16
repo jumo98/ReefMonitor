@@ -25,11 +25,20 @@ spec:
         - name: DOCKER_INFLUXDB_INIT_MODE
           value: setup
         - name: DOCKER_INFLUXDB_INIT_USERNAME
-          value: admin
+          valueFrom:
+          secretKeyRef:
+            name: reefmonitor-config
+            key: INFLUX_USER
         - name: DOCKER_INFLUXDB_INIT_PASSWORD
-          value: admin123admin
+          valueFrom:
+          secretKeyRef:
+            name: reefmonitor-config
+            key: INFLUX_PASSWORD
         - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
-          value: adminadminadmin
+          valueFrom:
+          secretKeyRef:
+            name: reefmonitor-config
+            key: INFLUX_TOKEN
         - name: DOCKER_INFLUXDB_INIT_ORG
           value: ReefMonitor
         - name: DOCKER_INFLUXDB_INIT_BUCKET
@@ -45,7 +54,7 @@ spec:
         - ReadWriteOnce
         resources:
           requests:
-            storage: 1Gi
+            storage: 5Gi
         volumeMode: Filesystem
 ---
 apiVersion: v1

@@ -26,7 +26,6 @@ if INFLUX_TOKEN == None or INFLUX_TOKEN == "":
 # Mail
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-
 EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.strato.de")
 EMAIL_PORT = os.environ.get("EMAIL_PORT", 465)
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
@@ -135,7 +134,7 @@ else:
     DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get("POSTGRE_NAME", ""),
+        'NAME': os.environ.get("POSTGRE_USER", ""),
         'USER': os.environ.get("POSTGRE_USER", ""),
         'PASSWORD': os.environ.get("POSTGRE_PASSWORD", ""),
         'HOST': os.environ.get("POSTGRE_HOST", ""),

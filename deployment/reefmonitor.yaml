@@ -17,18 +17,51 @@ spec:
     spec:
       containers:
       - name: reefmonitor
-        image: motzi/reefmonitor:latest
-        imagePullPolicy: "Always"
+        image: motzi/reefmonitor:v1.0.0
+        imagePullPolicy: IfNotPresent
         env:
+        - name: DEBUG
+          value: False
+        - name: SECRET_KEY
+          valueFrom:
+          secretKeyRef:
+            name: reefmonitor-config
+            key: SECRET_KEY
         - name: INFLUX_TOKEN
-          value: adminadminadmin
+          valueFrom:
+          secretKeyRef:
+            name: reefmonitor-config
+            key: INFLUX_TOKEN
         - name: INFLUX_URL
-          value: http://influxdb:8086
-        - name: MAILJET_KEY
-          value: ace66c53a10a9f7e720d7a410f4aa76e
-        - name: MAILJET_SECRET
-          value: b1cc335db5f5da6a9b58dddee1051785
-        
+          valueFrom:
+          secretKeyRef:
+            name: reefmonitor-config
+            key: INFLUX_URL
+        - name: EMAIL_HOST_USER
+          valueFrom:
+          secretKeyRef:
+            name: reefmonitor-config
+            key: EMAIL_HOST_USER
+        - name: EMAIL_HOST_PASSWORD
+          valueFrom:
+          secretKeyRef:
+            name: reefmonitor-config
+            key: EMAIL_HOST_PASSWORD
+        - name: POSTGRE_HOST
+          valueFrom:
+          secretKeyRef:
+            name: reefmonitor-config
+            key: POSTGRE_HOST
+        - name: POSTGRE_USER
+          valueFrom:
+          secretKeyRef:
+            name: reefmonitor-config
+            key: POSTGRE_USER
+        - name: POSTGRE_PASSWORD
+          valueFrom:
+          secretKeyRef:
+            name: reefmonitor-config
+            key: POSTGRE_PASSWORD
 ---
 apiVersion: v1
 kind: Service
@@ -41,6 +74,6 @@ spec:
   ports:
     - name: http
       protocol: TCP
-      port: 1337
+      port: 8000
       targetPort: 8000
   type: LoadBalancer

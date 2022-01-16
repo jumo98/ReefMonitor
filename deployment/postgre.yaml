@@ -22,9 +22,15 @@ spec:
               mountPath: /data
           env:
             - name: POSTGRES_USER
-              value: 'admin'
+              valueFrom:
+              secretKeyRef:
+                name: reefmonitor-config
+                key: POSTGRE_USER
             - name: POSTGRES_PASSWORD
-              value: 'H!gLK$V&kR9]3Ntu'
+              valueFrom:
+              secretKeyRef:
+                name: reefmonitor-config
+                key: POSTGRE_PASSWORD
             - name: PGDATA
               value: /data/pgdata
   volumeClaimTemplates:
@@ -34,7 +40,7 @@ spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 1Gi
+            storage: 2Gi
 ---
 apiVersion: v1
 kind: Service

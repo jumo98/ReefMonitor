@@ -37,17 +37,17 @@ def register_user(request):
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
-            form.save()
             username = form.cleaned_data.get("username")
             email = form.cleaned_data.get("email")
             raw_password = form.cleaned_data.get("password1")
             raw_password_2 = form.cleaned_data.get("password2")
             if (raw_password == raw_password_2): 
-                existing_users = User.objects.filter(email=email)
-                if existing_users.count() > 0:
+                existing_users = User.objects.filter(email__exact=email).count()
+                if existing_users > 0:
                     msg = 'There already exists a user with this email.'
                     return render(request, "registration/register.html", {"form": form, "msg": msg, "success": success})
-                user = authenticate(username=username, password=raw_password, email=email)
+                form.save()
+                authenticate(username=username, password=raw_password, email=email)
                 msg = 'User created - please <a href="/login">login</a>.'
                 success = True
                 return redirect("/login/")
