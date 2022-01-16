@@ -18,5 +18,6 @@ COPY . /usr/src/app
 EXPOSE 8000
 
 ADD entrypoint.sh /
+RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
