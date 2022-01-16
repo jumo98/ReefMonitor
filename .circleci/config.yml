@@ -37,6 +37,15 @@ jobs:
          echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
      - run: docker build -t motzi/reefmonitor:$CIRCLE_BRANCH .
      - run: docker push motzi/reefmonitor:$CIRCLE_BRANCH
+
+  build-and-push-tagged:
+   machine: true
+   steps:
+     - checkout
+     - run: |
+         echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+     - run: docker build -t motzi/reefmonitor:$CIRCLE_TAG .
+     - run: docker push motzi/reefmonitor:$CIRCLE_TAG
      
   
 workflows:
@@ -47,6 +56,9 @@ workflows:
             tags:
               only: /.*/
       - build-and-push:
+          requires:
+            - build-and-test
+      - build-and-push-tagged:
           filters:
             tags:
               only: /.*/
