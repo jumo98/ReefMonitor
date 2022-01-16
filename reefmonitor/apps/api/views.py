@@ -12,9 +12,6 @@ from ..aquariums.models import Aquarium
 from ..aquariums.handler import Handler
 
 class SwaggerView(APIView):
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
-
     def get(self, request):
         f = open('static/swagger/swagger.json', 'r')
         data = json.load(f)
