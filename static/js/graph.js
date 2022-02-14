@@ -12,7 +12,16 @@ $(document).ready(function () {
     parameterUnits = JSON.parse(parameters_units_json)
     // Initialize date and time buttons according to passed time
     $('#input-start-time').val(moment(time_start).format('HH:mm:ss'))
+    $('#input-start-time').timepicker({
+        maxTime : moment(time_start).subtract(moment.duration("00:01:00")).format('HH:mm:ss'),
+    });
+
     $('#input-start-date').val(moment(time_start).format('yyyy-MM-DD'))
+    $('#input-start-time').datepicker({
+        endDate : moment(time_start).format('yyyy-MM-DD'),
+    });
+
+    
     $('#input-end-time').val(moment(time_end).format('HH:mm:ss'))
     $('#input-end-date').val(moment(time_end).format('yyyy-MM-DD'))
 

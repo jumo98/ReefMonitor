@@ -21,7 +21,6 @@ class NotificationHandler():
 
         # If an timeout exists:
         if timeout:
-            #
             if timeout.IsOver():
                 timeout.AddViolation(violation)
                 violations = timeout.violations.all()

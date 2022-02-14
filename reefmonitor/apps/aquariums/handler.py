@@ -42,6 +42,3 @@ class Handler():
         self.aquarium.delete()
         self.db.DeleteDatabase()
         return 
-
-    def checkRules(self):
-        print("hi")
