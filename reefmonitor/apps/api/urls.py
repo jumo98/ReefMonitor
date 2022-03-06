@@ -1,5 +1,6 @@
 from django.urls import path
 from django.views.generic import TemplateView
+from rest_framework.authtoken import views
 from .views import AquariumView, MeasurementView, SwaggerView
 
 urlpatterns = [
@@ -12,5 +13,8 @@ urlpatterns = [
     # API calls
     path('aquariums/', AquariumView.as_view()),
     path('aquariums/<str:id>', AquariumView.as_view()),
-    path('aquariums/<str:id>/measurements', MeasurementView.as_view())
+    path('aquariums/<str:id>/measurements', MeasurementView.as_view()),
+    # Token auth
+    path('token/', views.obtain_auth_token),
+    path('token', views.obtain_auth_token)
 ]

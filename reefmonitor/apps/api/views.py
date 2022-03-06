@@ -1,6 +1,6 @@
 import json
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -18,7 +18,6 @@ class SwaggerView(APIView):
         return JsonResponse(data, safe=False)
 
 class AquariumView(APIView):
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, id=None):
@@ -36,7 +35,6 @@ class AquariumView(APIView):
         return JsonResponse(serializer.data, safe=False)
 
 class MeasurementView(APIView):
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request, id=None):

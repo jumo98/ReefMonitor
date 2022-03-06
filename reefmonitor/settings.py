@@ -39,11 +39,14 @@ EMAIL_USE_SSL = True
 
 # REST API 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ],
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
+    'DEFAULT_PERMISSION_CLASSES': [
+            'rest_framework.permissions.AllowAny',
+        ],
+        'DEFAULT_AUTHENTICATION_CLASSES': (
+            'rest_framework.authentication.BasicAuthentication',  # enables simple command line authentication
+            'rest_framework.authentication.SessionAuthentication',
+            'rest_framework.authentication.TokenAuthentication',
+        )
 }
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -73,6 +76,7 @@ INSTALLED_APPS = [
     'reefmonitor.apps.notifications',
 
     'rest_framework',
+    'rest_framework.authtoken',
     
     'django.contrib.admin',
     'django.contrib.auth',

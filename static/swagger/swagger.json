@@ -1,205 +1,278 @@
 {
-    "swagger": "2.0",
+    "openapi": "3.0.1",
     "info": {
-        "version": "1.0.0",
-        "title": "ReefMonitor API"
+      "title": "ReefMonitor API",
+      "version": "1.0.0"
     },
-    "basePath": "/api/v1",
-    "tags": [
-        {
-            "name": "aquariums",
-            "description": "Everything about your Aquariums"
-        }
+    "servers": [
+      {
+        "url": "/api/v1"
+      }
     ],
-    "schemes": [
-        "https"
+    "tags": [
+      {
+        "name": "aquariums",
+        "description": "Everything about your Aquariums"
+      }
     ],
     "paths": {
-        "/aquariums": {
-            "get": {
-                "tags": [
-                    "aquariums"
-                ],
-                "summary": "get all your aquariums",
-                "produces": [
-                    "application/json"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Aquarium"
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "basicAuth": []
-                    }
-                ]
-            }
-        },
-        "/aquariums/{id}": {
-            "get": {
-                "tags": [
-                    "aquariums"
-                ],
-                "summary": "get a single of your aquariums",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of the aquarium",
-                        "required": true,
-                        "type": "string",
-                        "format": "uuid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/Aquarium"     
-                        }
-                    },
-                    "403": {
-                        "description": "No access to this aquarium."
-                    },
-                    "404": {
-                        "description": "Aquarium was not found."
-                    }
-                },
-                "security": [
-                    {
-                        "basicAuth": []
-                    }
-                ]
-            }
-        },
-        "/aquariums/{id}/measurements": {
-            "post": {
-                "tags": [
-                    "aquariums"
-                ],
-                "summary": "uploads an measurement for one aquarium",
-                "description": "",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of the aquarium",
-                        "required": true,
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Measurement object that needs to be added to the aquarium",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Measurement"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Measurement was created successfully",
-                        "schema": {
-                            "$ref": "#/definitions/Measurement"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request"
-                    },
-                    "403": {
-                        "description": "No access to this aquarium."
-                    },
-                    "404": {
-                        "description": "Aquarium was not found."
-                    }
-                },
-                "security": [
-                    {
-                        "basicAuth": []
-                    }
-                ]
-            }
-        }
-    },
-    "securityDefinitions": {
-        "basicAuth": {
-            "type": "basic"
-        }
-    },
-    "definitions": {
-        "Aquarium": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "format": "uuid"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "owner": {
-                    "type": "string"
-                },
-                "create_date": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "update_date": {
-                    "type": "string",
-                    "format": "date-time"
-                }
-            }
-        },
-        "Parameter": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "enum": [
-                        "Salinity",
-                        "Temperature",
-                        "Carbonate Hardness",
-                        "Calcium",
-                        "Magnesium"
-                    ]
-                },
-                "value": {
-                    "type": "number"
-                }
-            }
-        },
-        "Measurement": {
-            "type": "object",
-            "properties": {
-                "timestamp": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "parameters": {
+      "/aquariums": {
+        "get": {
+          "tags": [
+            "aquariums"
+          ],
+          "summary": "get all your aquariums",
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/Parameter"
+                      "$ref": "#/components/schemas/Aquarium"
                     }
+                  }
                 }
+              }
             }
+          },
+          "security": [
+            {
+              "basicAuth": [],
+              "bearerAuth": []
+            }
+          ]
         }
+      },
+      "/aquariums/{id}": {
+        "get": {
+          "tags": [
+            "aquariums"
+          ],
+          "summary": "get a single of your aquariums",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID of the aquarium",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Aquarium"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "No access to this aquarium.",
+              "content": {}
+            },
+            "404": {
+              "description": "Aquarium was not found.",
+              "content": {}
+            }
+          },
+          "security": [
+            {
+              "basicAuth": [],
+              "bearerAuth": []
+            }
+          ]
+        }
+      },
+      "/aquariums/{id}/measurements": {
+        "post": {
+          "tags": [
+            "aquariums"
+          ],
+          "summary": "uploads an measurement for one aquarium",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID of the aquarium",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "Measurement object that needs to be added to the aquarium",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Measurement"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "Measurement was created successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Measurement"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {}
+            },
+            "403": {
+              "description": "No access to this aquarium.",
+              "content": {}
+            },
+            "404": {
+              "description": "Aquarium was not found.",
+              "content": {}
+            }
+          },
+          "security": [
+            {
+              "basicAuth": [],
+              "bearerAuth": []
+            }
+          ],
+          "x-codegen-request-body-name": "body"
+        }
+      },
+      "/token": {
+        "post": {
+          "tags": [
+            "auth"
+          ],
+          "summary": "Retrieve an auth token",
+          "requestBody": {
+            "description": "Measurement object that needs to be added to the aquarium",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Token was retrieved successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AuthToken"
+                  }
+                }
+              }
+            }
+          },
+          "x-codegen-request-body-name": "body"
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "AuthRequest": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            }
+          }
+        },
+        "AuthToken": {
+          "type": "object",
+          "properties": {
+            "token": {
+              "type": "string"
+            }
+          }
+        },
+        "Aquarium": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": {
+              "type": "string"
+            },
+            "owner": {
+              "type": "string"
+            },
+            "create_date": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "update_date": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "Parameter": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "enum": [
+                "Salinity",
+                "Temperature",
+                "Carbonate Hardness",
+                "Calcium",
+                "Magnesium"
+              ]
+            },
+            "value": {
+              "type": "number"
+            }
+          }
+        },
+        "Measurement": {
+          "type": "object",
+          "properties": {
+            "timestamp": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "parameters": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Parameter"
+              }
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "basicAuth": {
+          "type": "http",
+          "scheme": "basic"
+        },
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer"
+        }
+      }
     }
-}
+  }
