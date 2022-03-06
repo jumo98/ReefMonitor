@@ -88,8 +88,18 @@ def overview_view(request, aquarium_id):
     context['parameter_units_json'] = json.dumps(Parameter.Units.choices)
 
     # Retrieve time range from query params
-    time_end = datetime.fromisoformat(request.GET.get('end', datetime.now().isoformat()))
+    time_end = timezone.now()
+    time_end_str = request.GET.get('end', None)
+
+    if time_end_str != None:
+        time_end = datetime.fromisoformat(time_end_str)
+
     time_start = datetime.fromisoformat(request.GET.get('start', str(time_end - timedelta(days=7))))
+    offset = time_end - time_start
+    # If invalid time range given, fall back to last 7 days
+    if offset.total_seconds() <= 0:
+        time_end = datetime.now()
+        time_start = time_end - timedelta(days=7)
     context['time_end'] = time_end
     context['time_start'] = time_start
 

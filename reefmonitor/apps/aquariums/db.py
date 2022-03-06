@@ -52,10 +52,8 @@ class TimeseriesDatabase():
 
 
     def GetMeasurements(self, start_time, end_time):
-        start = datetime_from_local_to_utc(
-            start_time).strftime("%Y-%m-%dT%H:%M:%SZ")
-        end = datetime_from_local_to_utc(
-            end_time).strftime("%Y-%m-%dT%H:%M:%SZ")
+        start = start_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+        end = end_time.strftime("%Y-%m-%dT%H:%M:%SZ")
 
         # Build query
         query = f"from(bucket:\"{self.bucket}\") |> range(start: {start}, stop: {end})"
@@ -97,11 +95,9 @@ class TimeseriesDatabase():
         return self.buckets_api.delete_bucket(bucket)
 
 
-def datetime_from_local_to_utc(utc_datetime):
-    now_timestamp = time.time()
-    offset = datetime.fromtimestamp(
-        now_timestamp) - datetime.utcfromtimestamp(now_timestamp)
-    return utc_datetime - offset
+def datetime_from_local_to_utc(naive_datetime):
+    aware = timezone.make_aware(naive_datetime)
+    return aware - aware.utcoffset()
 
 
 def build_latest_query(bucket):
