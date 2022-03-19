@@ -41,7 +41,6 @@ workflows:
   release: 
     jobs:
       - build-and-test:
-          pkg-manager: pipenv
           filters:
             tags:
               only: /.*/
