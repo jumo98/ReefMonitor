@@ -20,7 +20,8 @@ jobs:
           destination: tr1
   
   build-and-push:
-   machine: true
+   machine:
+      image: ubuntu-2004:202201-02
    steps:
      - checkout
      - run: |
@@ -29,7 +30,8 @@ jobs:
      - run: docker push motzi/reefmonitor:$CIRCLE_BRANCH
 
   build-and-push-tagged:
-   machine: true
+   machine:
+      image: ubuntu-2004:202201-02
    steps:
      - checkout
      - run: |
