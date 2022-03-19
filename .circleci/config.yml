@@ -5,8 +5,7 @@ orbs:
 
 jobs:
   build-and-test:
-    docker:
-      - image: cimg/python:3.8
+    executor: python/default
     steps:
       - checkout
       - restore_cache:
