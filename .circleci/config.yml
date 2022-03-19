@@ -1,32 +1,29 @@
 version: 2.1
 
-orbs:
-  python: circleci/python@2.0.3
-
 jobs:
   build-and-test:
-    executor: python/default
+    docker:
+      - image: cimg/python:3.10.1
     steps:
       - checkout
       - restore_cache:
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
           command: |
-            python -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
+            sudo pip install pipenv
+            pipenv install
       - save_cache:
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
             - "venv"
       - run:
-          name: Running tests
           command: |
-            . venv/bin/activate
-            python manage.py test
+            pipenv run python manage.py test
+      - store_test_results: 
+          path: test-results
       - store_artifacts:
-          path: test-reports/
-          destination: python_app
+          path: test-results
+          destination: tr1
   
   build-and-push:
    machine: true
