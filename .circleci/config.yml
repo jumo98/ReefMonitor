@@ -11,7 +11,8 @@ jobs:
           pkg-manager: pip
       - run:
           command: |
-            pipenv run python manage.py test
+            pytest --version
+          name: Test
       - store_test_results: 
           path: test-results
       - store_artifacts:
