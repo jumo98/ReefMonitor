@@ -9,13 +9,9 @@ jobs:
       - python/install-packages:
           pip-dependency-file: requirements.txt
           pkg-manager: pip
-      - python/install-packages:
-          args: pytest
-          pkg-manager: pip
-          pypi-cache: false
       - run:
           command: |
-            pytest --version
+            manage.py test
           name: Test
       - store_test_results: 
           path: test-results
